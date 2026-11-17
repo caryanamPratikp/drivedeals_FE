@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams, Link } from 'react-router-dom';
 import { useAppStore } from '../../store';
 import { authApi } from '../../api';
-import { AuthNavbar } from '../../components/auth/AuthNavbar';
 import { AuthVisualPanel } from '../../components/auth/AuthVisualPanel';
 import { AuthFormPanel } from '../../components/auth/AuthFormPanel';
 import { AuthOtpModal } from '../../components/auth/AuthOtpModal';
+import authBgImage from '../../assets/images/auth/drivedeals-auth-bg.webp';
 
 export const AuthPage = ({ defaultTab = 'login' }) => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -145,19 +145,59 @@ export const AuthPage = ({ defaultTab = 'login' }) => {
   };
 
   return (
-    <div className="min-h-screen bg-[#090B0D] text-white flex flex-col selection:bg-[#ED1725] selection:text-white antialiased">
-      {/* Top Navigation Bar matching reference image */}
-      <AuthNavbar currentTab={tab} onSelectTab={handleTabChange} />
+    <div className="min-h-screen w-full bg-[#090B0D] text-white flex flex-col justify-between selection:bg-[#ED1725] selection:text-white antialiased relative overflow-x-hidden">
+      {/* Full-Page Background Automotive Scene */}
+      <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+        <img
+          src={authBgImage}
+          alt="DriveDeals Premium Automotive Scene"
+          className="w-full h-full object-cover object-bottom sm:object-[center_70%] filter brightness-90 contrast-110"
+        />
 
-      {/* Main Split-Screen Workspace */}
-      <main className="flex-1 flex flex-col lg:flex-row items-stretch justify-between relative overflow-hidden">
-        {/* Left Visual Storytelling Panel (55–60%) */}
-        <div className="w-full lg:w-[58%] xl:w-[60%] flex flex-col">
+        {/* Black fade on the left, partially visible across center and under the card */}
+        <div className="absolute inset-0 bg-gradient-to-r from-[#090B0D] via-[#090B0D]/80 to-[#090B0D]/55" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#090B0D]/85 via-transparent to-[#090B0D]/90" />
+
+        {/* Dynamic Red Speed Slashes Accent */}
+        <svg
+          className="absolute -bottom-10 -left-10 w-72 h-72 text-[#ED1725] opacity-50"
+          viewBox="0 0 200 200"
+          fill="none"
+        >
+          <line x1="-20" y1="220" x2="160" y2="40" stroke="#ED1725" strokeWidth="6" strokeLinecap="round" />
+          <line x1="10" y1="230" x2="190" y2="50" stroke="#ED1725" strokeWidth="3" strokeLinecap="round" opacity="0.6" />
+          <line x1="40" y1="240" x2="220" y2="60" stroke="#ED1725" strokeWidth="1.5" strokeLinecap="round" opacity="0.3" />
+        </svg>
+        <div className="absolute -top-24 right-1/4 w-96 h-96 bg-[#ED1725]/15 rounded-full blur-3xl pointer-events-none" />
+      </div>
+
+      {/* Brand Logo Header (No Navbar as requested) */}
+      <header className="relative z-10 w-full px-6 sm:px-10 lg:px-16 py-6 sm:py-8 flex items-center justify-between">
+        <Link to="/" className="inline-flex items-center gap-3 group">
+          <div className="w-10 h-10 rounded-xl bg-[#ED1725] flex items-center justify-center text-white font-black text-xl shadow-lg shadow-[#ED1725]/30 group-hover:scale-105 transition-transform">
+            D
+          </div>
+          <div>
+            <div className="font-heading font-black text-xl sm:text-2xl text-white tracking-wider flex items-center gap-1.5">
+              <span>DRIVE</span>
+              <span className="text-[#ED1725]">DEALS</span>
+            </div>
+            <div className="text-[9px] font-bold tracking-[0.2em] text-[#A1A1AA] uppercase">
+              Buy Smarter, Together
+            </div>
+          </div>
+        </Link>
+      </header>
+
+      {/* Main Content: Left Storytelling, Right Floating Glass Auth Card */}
+      <main className="relative z-10 flex-1 w-full px-6 sm:px-10 lg:px-16 pb-8 sm:pb-12 flex flex-col lg:flex-row items-center justify-between gap-10 lg:gap-16 my-auto">
+        {/* Left Storytelling Section */}
+        <div className="w-full lg:w-[54%] xl:w-[58%]">
           <AuthVisualPanel />
         </div>
 
-        {/* Right Authentication Form Panel (40–45%) */}
-        <div className="w-full lg:w-[42%] xl:w-[40%] flex items-center justify-center p-6 sm:p-10 lg:p-12 xl:p-14 relative z-20">
+        {/* Right Floating Overlay Auth Card */}
+        <div className="w-full lg:w-[46%] xl:w-[42%] flex items-center justify-center lg:justify-end">
           <AuthFormPanel
             tab={tab}
             onTabChange={handleTabChange}
@@ -179,6 +219,12 @@ export const AuthPage = ({ defaultTab = 'login' }) => {
           />
         </div>
       </main>
+
+      {/* Subtle Bottom Footer */}
+      <footer className="relative z-10 w-full px-6 sm:px-10 lg:px-16 py-4 flex items-center justify-between text-[11px] text-[#71717A] border-t border-white/5">
+        <span>&copy; {new Date().getFullYear()} DriveDeals Technologies Pvt. Ltd.</span>
+        <span>100% Spam-Free Privacy Shield</span>
+      </footer>
 
       {/* High-Tech OTP Verification Modal Overlay */}
       {showOtpOverlay && (

@@ -136,7 +136,7 @@ export const LandingPage = () => {
             : 'bg-transparent border-b border-transparent py-4 sm:py-5'
         }`}
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
+        <div className="w-full px-6 sm:px-10 lg:px-16 flex items-center justify-between">
           {/* Left: Brand Logo */}
           <Link to="/" className="flex items-center gap-3 group">
             <img
@@ -166,12 +166,6 @@ export const LandingPage = () => {
               className="hover:text-white transition-colors py-1 cursor-pointer"
             >
               Benefits
-            </button>
-            <button
-              onClick={() => scrollToSection('deal-groups')}
-              className="hover:text-white transition-colors py-1 cursor-pointer"
-            >
-              Find Your Deal Group
             </button>
             <button
               onClick={() => scrollToSection('about')}
@@ -278,12 +272,6 @@ export const LandingPage = () => {
                   Benefits
                 </button>
                 <button
-                  onClick={() => scrollToSection('deal-groups')}
-                  className="text-left hover:text-white py-1 cursor-pointer"
-                >
-                  Find Your Deal Group
-                </button>
-                <button
                   onClick={() => scrollToSection('about')}
                   className="text-left hover:text-white py-1 cursor-pointer"
                 >
@@ -314,7 +302,7 @@ export const LandingPage = () => {
         <div className="absolute top-1/4 -left-40 w-96 h-96 bg-[#ED1725]/15 rounded-full blur-[140px] pointer-events-none" />
         <div className="absolute top-1/3 -right-40 w-96 h-96 bg-[#ED1725]/15 rounded-full blur-[140px] pointer-events-none" />
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="w-full px-6 sm:px-10 lg:px-16">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-6 items-center">
 
             {/* Left Content Column */}
@@ -394,7 +382,7 @@ export const LandingPage = () => {
             {/* Right Automotive Scene Column */}
             <div className="lg:col-span-7 relative flex items-center justify-center">
               {/* Automotive Fleet with Shaniwar Wada & Pune Sunset */}
-              <div className="relative w-full max-w-2xl lg:max-w-none">
+              <div className="relative w-full">
                 {/* Red Atmospheric Backdrop */}
                 <div className="absolute inset-0 bg-radial from-[#ED1725]/20 via-transparent to-transparent blur-2xl pointer-events-none" />
 
@@ -423,7 +411,7 @@ export const LandingPage = () => {
       {/* SECTION C — TRUST / BENEFIT STRIP                                         */}
       {/* ========================================================================= */}
       <section id="benefits" className="py-6 relative z-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="w-full px-6 sm:px-10 lg:px-16">
           <div className="bg-[#17191D]/90 backdrop-blur-xl border border-white/10 rounded-2xl p-6 sm:p-7 shadow-2xl">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8 divide-y sm:divide-y-0 sm:divide-x divide-white/10">
 
@@ -480,7 +468,7 @@ export const LandingPage = () => {
       {/* SECTION D — HOW IT WORKS (4-STEP CONNECTED PROTOCOL)                      */}
       {/* ========================================================================= */}
       <section id="how-it-works" className="py-20 relative">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+        <div className="w-full px-6 sm:px-10 lg:px-16 space-y-12">
 
           {/* Section Header */}
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-white/10 pb-8">
@@ -603,7 +591,7 @@ export const LandingPage = () => {
       {/* SECTION E — WHY CHOOSE DRIVEDEALS? + VERIFIED PROTOCOL GUARANTEE          */}
       {/* ========================================================================= */}
       <section className="py-16 bg-[#17191D]/40 border-y border-white/10 relative">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="w-full px-6 sm:px-10 lg:px-16">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
 
             {/* Left Column: 4 Key Value Pillars */}
@@ -729,7 +717,7 @@ export const LandingPage = () => {
       {/* SECTION F — POPULAR CAR BRANDS                                            */}
       {/* ========================================================================= */}
       <section className="py-20 relative">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
+        <div className="w-full px-6 sm:px-10 lg:px-16 space-y-10">
 
           <div className="text-center space-y-2">
             <h2 className="text-3xl sm:text-4xl font-heading font-black text-white tracking-tight">
@@ -765,234 +753,14 @@ export const LandingPage = () => {
         </div>
       </section>
 
-      {/* ========================================================================= */}
-      {/* SECTION G — FIND YOUR DEAL GROUP & CAR DISCOVERY CARDS                    */}
-      {/* (Data-aware rendering: Loading, Error, Empty Groups, Real Groups)         */}
-      {/* ========================================================================= */}
-      <section id="deal-groups" className="py-16 bg-[#17191D]/50 border-y border-white/10 relative">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
-
-          {/* 1. If Loading Data from Backend */}
-          {(groupsLoading || carsLoading) && !groupsFetched && !carsFetched && (
-            <LoadingState message="Connecting to verified Pune dealership catalogue..." />
-          )}
-
-          {/* 2. If API Failure */}
-          {(groupsError || carsError) && activeGroups.length === 0 && liveCars.length === 0 && (
-            <ErrorState
-              message={groupsError || carsError || 'Unable to load vehicle data from server.'}
-              onRetry={() => {
-                fetchCars();
-                fetchGroups();
-              }}
-            />
-          )}
-
-          {/* 3. When NO Buying Groups Exist: Render Section 3 "Find Your Deal Group" */}
-          {!groupsLoading && activeGroups.length === 0 && (
-            <div className="space-y-12">
-              <EmptyGroupsState
-                city={selectedCity}
-                onStartGroup={() => navigate('/cars')}
-              />
-
-              {/* Genuine Showroom Car Discovery Cards (Only shown when live cars exist in DB) */}
-              {liveCars.length > 0 ? (
-                <div className="space-y-6 pt-4">
-                  <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-white/10 pb-4">
-                    <div className="space-y-1">
-                      <div className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-[#ED1725]">
-                        <Car size={13} /> Genuine Showroom Inventory
-                      </div>
-                      <h3 className="text-2xl sm:text-3xl font-heading font-black text-white tracking-tight">
-                        Available Showroom Models in {selectedCity}
-                      </h3>
-                      <p className="text-xs sm:text-sm text-[#A1A1AA]">
-                        Select any vehicle below to create the first demand group in your city.
-                      </p>
-                    </div>
-
-                    <Link to="/cars" className="text-xs font-bold text-[#ED1725] hover:underline flex items-center gap-1 shrink-0">
-                      <span>Explore All Models ({liveCars.length})</span>
-                      <ChevronRight size={14} />
-                    </Link>
-                  </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                    {liveCars.slice(0, 4).map((car) => (
-                      <div
-                        key={car.id}
-                        className="bg-[#17191D] border border-white/10 hover:border-[#ED1725]/60 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 flex flex-col justify-between group"
-                      >
-                        <div className="relative h-48 bg-gradient-to-b from-white/[0.04] to-transparent p-4 flex items-center justify-center border-b border-white/10 overflow-hidden">
-                          <img
-                            src={getCarImage(car)}
-                            alt={car.modelName || car.model}
-                            className="max-h-full max-w-full object-contain transform transition-transform duration-500 group-hover:scale-105"
-                          />
-                          <div className="absolute top-3 left-3 bg-black/60 backdrop-blur-md px-2.5 py-1 rounded-full text-[10px] font-bold text-white border border-white/15">
-                            {car.brand}
-                          </div>
-                          <div className="absolute top-3 right-3 bg-white/10 text-slate-300 px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider">
-                            Ready for Group
-                          </div>
-                        </div>
-
-                        <div className="p-5 space-y-4">
-                          <div>
-                            <div className="text-[10px] font-bold uppercase tracking-wider text-[#A1A1AA]">
-                              {car.brand}
-                            </div>
-                            <h4 className="font-heading font-bold text-white text-lg mt-0.5">
-                              {car.modelName || car.model}
-                            </h4>
-                          </div>
-
-                          <div className="p-3 rounded-xl bg-white/[0.04] border border-white/10 flex items-center justify-between text-xs">
-                            <span className="text-[#A1A1AA] font-medium">Starting Ex-Showroom:</span>
-                            <span className="font-heading font-black text-white text-sm">
-                              {formatINR(car.illustrativeStartingPrice || car.minPrice || 0)}*
-                            </span>
-                          </div>
-
-                          <div className="text-xs text-[#A1A1AA] flex items-center gap-1.5 pt-0.5">
-                            <Users size={12} className="text-[#ED1725]" />
-                            <span>Be the first interested buyer</span>
-                          </div>
-
-                          <Link to={`/cars/${car.id}`} className="block pt-1">
-                            <button className="w-full py-2.5 rounded-xl bg-[#ED1725] hover:bg-[#A30E18] text-white font-bold text-xs transition-all duration-200 cursor-pointer flex items-center justify-center gap-1.5 shadow-md">
-                              <span>Start a Group for this Car</span>
-                              <ArrowRight size={13} />
-                            </button>
-                          </Link>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              ) : (
-                /* Rule 4G: When Catalogue is empty */
-                <EmptyCatalogueState
-                  onRetry={fetchCars}
-                  isAdmin={currentUser?.role === 'ROLE_ADMIN'}
-                  onAdminAction={() => navigate('/admin/catalogue')}
-                />
-              )}
-            </div>
-          )}
-
-          {/* 4. When ACTIVE GROUPS EXIST in Database: Render Real Collective Cards */}
-          {activeGroups.length > 0 && (
-            <div className="space-y-6">
-              <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-white/10 pb-4">
-                <div className="space-y-1">
-                  <div className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-[#ED1725]">
-                    <Users size={13} /> Live Buyer Demand Collectives
-                  </div>
-                  <h3 className="text-2xl sm:text-3xl font-heading font-black text-white tracking-tight">
-                    Active Buying Groups in {selectedCity}
-                  </h3>
-                  <p className="text-xs sm:text-sm text-[#A1A1AA]">
-                    Join an active group to pool volume negotiations with verified regional dealers.
-                  </p>
-                </div>
-
-                <Link to="/groups" className="text-xs font-bold text-[#ED1725] hover:underline flex items-center gap-1 shrink-0">
-                  <span>View All Groups ({activeGroups.length})</span>
-                  <ChevronRight size={14} />
-                </Link>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                {activeGroups.map((group) => {
-                  const car = group.car || liveCars.find((c) => c.id === group.carId);
-                  const memberCount = group.currentMembers || group.memberIds?.length || 0;
-                  const targetCount = group.targetMembers || group.targetSize || 5;
-
-                  return (
-                    <div
-                      key={group.id}
-                      className="bg-[#17191D] border border-white/10 hover:border-[#ED1725]/60 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 flex flex-col justify-between group"
-                    >
-                      <div className="relative h-48 bg-gradient-to-b from-white/[0.04] to-transparent p-4 flex items-center justify-center border-b border-white/10 overflow-hidden">
-                        <img
-                          src={getCarImage(car)}
-                          alt={car?.modelName || group.name}
-                          className="max-h-full max-w-full object-contain transform transition-transform duration-500 group-hover:scale-105"
-                        />
-                        <div className="absolute top-3 left-3 bg-black/60 backdrop-blur-md px-2.5 py-1 rounded-full text-[10px] font-bold text-white border border-white/15">
-                          {group.city || selectedCity}
-                        </div>
-                        <div className="absolute top-3 right-3 bg-[#ED1725]/90 text-white px-2 py-0.5 rounded-md text-[10px] font-black uppercase tracking-wider">
-                          {group.status}
-                        </div>
-                      </div>
-
-                      <div className="p-5 space-y-4">
-                        <div>
-                          <div className="text-[10px] font-bold uppercase tracking-wider text-[#A1A1AA]">
-                            {car?.brand || 'Verified Vehicle'}
-                          </div>
-                          <h4 className="font-heading font-bold text-white text-lg mt-0.5">
-                            {car?.modelName || group.name}
-                          </h4>
-                          <div className="text-xs text-slate-400 mt-0.5">
-                            Trim: <span className="font-semibold text-white">{group.variant?.name || 'Standard'}</span>
-                          </div>
-                        </div>
-
-                        {/* Real Buyer Count & Progress */}
-                        <div className="space-y-1.5">
-                          <div className="flex justify-between text-[11px] font-semibold">
-                            <span className="text-[#A1A1AA] flex items-center gap-1">
-                              <Users size={12} className="text-[#ED1725]" /> Interested Buyers:
-                            </span>
-                            <span className="text-white font-bold">
-                              {memberCount > 0 ? `${memberCount} of ${targetCount} Joined` : 'Be the first interested buyer'}
-                            </span>
-                          </div>
-                          <div className="w-full h-2 rounded-full bg-white/10 overflow-hidden">
-                            <div
-                              className="h-full bg-gradient-to-r from-[#ED1725] to-[#A30E18] rounded-full transition-all duration-500"
-                              style={{ width: `${Math.min(100, Math.max(10, (memberCount / targetCount) * 100))}%` }}
-                            />
-                          </div>
-                        </div>
-
-                        {/* Quotations Status Notice (Rule 4C) */}
-                        <div className="p-2.5 rounded-xl bg-white/[0.03] border border-white/10 text-[11px] text-[#A1A1AA]">
-                          {group.quotationVersions && group.quotationVersions.length > 0 ? (
-                            <span className="text-[#168B6A] font-bold flex items-center gap-1">
-                              <CheckCircle2 size={12} /> {group.quotationVersions.length} Dealer Quotations Received
-                            </span>
-                          ) : (
-                            <span>Dealer offers will appear here once dealerships submit their quotations.</span>
-                          )}
-                        </div>
-
-                        <Link to={`/groups/${group.id}`} className="block pt-1">
-                          <button className="w-full py-2.5 rounded-xl bg-[#ED1725] hover:bg-[#A30E18] text-white font-bold text-xs transition-all duration-200 cursor-pointer flex items-center justify-center gap-1.5 shadow-md">
-                            <span>Join Group</span>
-                            <ArrowRight size={13} />
-                          </button>
-                        </Link>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          )}
-
-        </div>
-      </section>
+      
 
       {/* ========================================================================= */}
       {/* SECTION H — TESTIMONIALS (RULE 4E: HIDDEN WHEN 0 REAL REVIEWS EXIST)      */}
       {/* ========================================================================= */}
       {verifiedTestimonials.length > 0 && (
         <section className="py-20 relative">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+          <div className="w-full px-6 sm:px-10 lg:px-16 space-y-12">
             <div className="text-center space-y-2">
               <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#ED1725]">
                 <Star size={13} fill="currentColor" /> Verified Community Reviews
@@ -1046,7 +814,7 @@ export const LandingPage = () => {
       {/* SECTION I — FINAL CTA BANNER (WITH CITY SKYLINE SILHOUETTE)               */}
       {/* ========================================================================= */}
       <section className="py-12 relative overflow-hidden">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="w-full px-6 sm:px-10 lg:px-16">
           <div className="relative rounded-3xl bg-gradient-to-r from-[#A30E18] via-[#ED1725] to-[#17191D] p-8 sm:p-12 lg:p-14 overflow-hidden shadow-2xl border border-white/20">
 
             {/* City Skyline Silhouette Watermark in Background */}
@@ -1093,7 +861,7 @@ export const LandingPage = () => {
       {/* SECTION J — FOOTER                                                        */}
       {/* ========================================================================= */}
       <footer id="about" className="pt-16 pb-12 bg-[#090B0D] border-t border-white/10 text-xs text-[#A1A1AA] relative">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+        <div className="w-full px-6 sm:px-10 lg:px-16 space-y-12">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8 lg:gap-12">
 
             {/* Brand Column */}
@@ -1140,11 +908,6 @@ export const LandingPage = () => {
                   <Link to="/groups" className="hover:text-white transition-colors">
                     Active Buyer Groups
                   </Link>
-                </li>
-                <li>
-                  <button onClick={() => scrollToSection('deal-groups')} className="hover:text-white transition-colors cursor-pointer">
-                    Find Your Deal Group
-                  </button>
                 </li>
                 <li>
                   <Link to="/login" className="hover:text-white transition-colors">
