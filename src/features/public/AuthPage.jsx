@@ -145,39 +145,6 @@ export const AuthPage = ({ defaultTab = 'login' }) => {
     }
   };
 
-  // 1-Click Demo Profile Authentication for This Tab Only
-  const handleQuickPreset = async (quickPhone, quickProfile) => {
-    setError(null);
-    setLoading(true);
-    try {
-      const cleanPhone = quickPhone.replace(/\D/g, '');
-      setPhone(cleanPhone);
-      const res = await loginWithOtp(quickPhone, '123456', quickProfile);
-      if (res.success) {
-        setIsUnlocking(true);
-        setTimeout(() => {
-          if (res.user?.role === 'DEALER') {
-            navigate('/dealer/dashboard');
-          } else {
-            navigate('/buyer/dashboard');
-          }
-        }, 800);
-      } else {
-        setTab('register');
-        setName(quickProfile.name || '');
-        setRole(quickProfile.role || 'BUYER');
-        setCity(quickProfile.city || 'Pune');
-        if (quickProfile.dealershipName) setDealershipName(quickProfile.dealershipName);
-        if (quickProfile.brand) setDealerBrand(quickProfile.brand);
-        setError('Please click "Register with us" to finish setting up this demo account.');
-      }
-    } catch (err) {
-      setError(err.message || 'Quick login failed');
-    } finally {
-      setLoading(false);
-    }
-  };
-
   return (
     <div className="min-h-screen bg-[#090B0D] text-white flex flex-col lg:flex-row items-center justify-center p-4 sm:p-8 lg:p-16 relative overflow-hidden">
       {/* Background Ambience */}
@@ -294,81 +261,6 @@ export const AuthPage = ({ defaultTab = 'login' }) => {
           >
             Register with us
           </button>
-        </div>
-
-        {/* Quick Demo Test Profiles (Tab-Isolated) */}
-        <div className="mb-5 p-3 rounded-2xl bg-white/[0.03] border border-white/10">
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-[11px] font-bold text-white flex items-center gap-1.5">
-              <Sparkles className="w-3.5 h-3.5 text-[#ED1725]" />
-              Quick Test Sign In (This Tab Only)
-            </span>
-            <span className="text-[10px] text-emerald-400 font-semibold px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20">
-              Multi-Tab Ready
-            </span>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-1.5">
-            <button
-              type="button"
-              disabled={loading}
-              onClick={() =>
-                handleQuickPreset('+919876543210', {
-                  name: 'Priya Sharma',
-                  role: 'BUYER',
-                  city: 'Pune',
-                })
-              }
-              className="p-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-left transition-all cursor-pointer group hover:border-[#ED1725]/40"
-            >
-              <div className="text-[11px] font-bold text-white group-hover:text-[#ED1725] truncate">
-                👤 Priya (Buyer 1)
-              </div>
-              <div className="text-[9px] text-[#71717A] font-mono mt-0.5">9876543210</div>
-            </button>
-
-            <button
-              type="button"
-              disabled={loading}
-              onClick={() =>
-                handleQuickPreset('+919876543211', {
-                  name: 'Rahul Verma',
-                  role: 'BUYER',
-                  city: 'Pune',
-                })
-              }
-              className="p-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-left transition-all cursor-pointer group hover:border-[#ED1725]/40"
-            >
-              <div className="text-[11px] font-bold text-white group-hover:text-[#ED1725] truncate">
-                👤 Rahul (Buyer 2)
-              </div>
-              <div className="text-[9px] text-[#71717A] font-mono mt-0.5">9876543211</div>
-            </button>
-
-            <button
-              type="button"
-              disabled={loading}
-              onClick={() =>
-                handleQuickPreset('+919898989898', {
-                  name: 'Sahyadri Mahindra Motors',
-                  role: 'DEALER',
-                  city: 'Pune',
-                  dealershipName: 'Sahyadri Mahindra Motors Pvt Ltd',
-                  brand: 'Mahindra',
-                })
-              }
-              className="p-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-left transition-all cursor-pointer group hover:border-emerald-500/40"
-            >
-              <div className="text-[11px] font-bold text-white group-hover:text-emerald-400 truncate">
-                🏢 Sahyadri Dealer
-              </div>
-              <div className="text-[9px] text-[#71717A] font-mono mt-0.5">9898989898</div>
-            </button>
-          </div>
-
-          <p className="text-[10px] text-[#71717A] mt-2 text-center">
-            💡 Tip: Open separate browser tabs to log in as Buyer and Dealer side-by-side!
-          </p>
         </div>
 
         {/* Error Alert */}

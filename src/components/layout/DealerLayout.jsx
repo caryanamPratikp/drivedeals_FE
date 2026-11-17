@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import { Sidebar } from './Sidebar';
 import { TopHeader } from './TopHeader';
-import { DemoToolbar } from './DemoToolbar';
 import { X } from 'lucide-react';
 
 export const DealerLayout = () => {
@@ -38,7 +37,6 @@ export const DealerLayout = () => {
 
       {/* Main Content Workspace */}
       <div className="flex-1 flex flex-col min-w-0">
-        <DemoToolbar />
         <TopHeader onMobileMenuToggle={() => setMobileSidebarOpen(!mobileSidebarOpen)} />
         <main className="flex-1 p-4 sm:p-6 lg:p-8 xl:p-10 max-w-[1600px] w-full mx-auto">
           <Outlet />
