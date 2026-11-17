@@ -1,106 +1,214 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ShieldCheck, MapPin, ArrowRight, Heart } from 'lucide-react';
+import { MapPin, ArrowRight } from 'lucide-react';
 
-export const Footer = () => {
+export const Footer = ({ id }) => {
   return (
-    <footer className="bg-[#090B0D] text-[#A1A1AA] border-t border-white/10 text-xs mt-auto">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 lg:gap-12">
-          {/* 1. Brand Column */}
-          <div className="md:col-span-2 space-y-4">
-            <Link to="/" className="flex items-center gap-3 group select-none">
-              <div className="w-9 h-9 rounded-xl bg-white/5 border border-white/15 flex items-center justify-center shadow-inner">
-                <div className="w-4 h-4 rounded-full border-2 border-white flex items-center justify-center">
-                  <div className="w-1.5 h-1.5 rounded-full bg-[#ED1725]" />
-                </div>
-              </div>
-              <span className="font-heading font-black text-xl tracking-tight text-white">
-                DRIVE<span className="text-[#ED1725]">DEALS</span>
-              </span>
+    <footer
+      id={id}
+      className="bg-[#171717] text-[#A3A3A3] border-t border-white/10 text-xs w-full relative z-10"
+    >
+      {/* Main Footer Container */}
+      <div className="w-full px-6 sm:px-10 lg:px-16 xl:px-20 max-w-[1720px] mx-auto pt-14 sm:pt-16 pb-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 lg:gap-14 items-start">
+
+          {/* COLUMN 1 — BRAND INTRODUCTION (45% on desktop: 5/12 cols + spacing) */}
+          <div className="lg:col-span-5 space-y-4 text-left">
+            {/* Logo */}
+            <Link to="/" className="inline-block transition-transform hover:opacity-90">
+              <img
+                src="/assets/logo/drivedeals-logo.png"
+                alt="DriveDeals"
+                className="h-9 sm:h-10 w-auto object-contain"
+              />
             </Link>
 
-            <p className="text-white font-medium text-sm">“Buy Smarter, Together.”</p>
+            {/* Prominent Tagline */}
+            <h3 className="font-heading font-bold text-white text-base sm:text-lg tracking-tight">
+              Buy smarter, together.
+            </h3>
 
-            <p className="text-xs text-[#71717A] max-w-md leading-relaxed">
-              India’s premier group car-buying platform aggregating real buyer demand to unlock bulk dealership pricing. Transparent on-road quotations, verified OEM franchises, and DPDP Act compliant privacy.
+            {/* Description with comfortable line height */}
+            <p className="text-xs sm:text-sm text-[#A3A3A3] leading-relaxed max-w-md font-normal">
+              DriveDeals makes car buying smarter by bringing together buyers interested in the same vehicles, helping them explore options and compare dealer offers.
             </p>
 
-            <div className="flex items-center gap-2 text-xs text-[#A1A1AA] pt-1">
-              <MapPin className="w-3.5 h-3.5 text-[#ED1725] shrink-0" />
-              <span>Pilot Markets: Pune, Mumbai Metropolitan Region, Bengaluru, Delhi NCR</span>
+            {/* Location Separated */}
+            <div className="pt-2 flex items-center gap-2 text-xs text-[#A3A3A3]">
+              <div className="w-5 h-5 rounded-full bg-[#A31C18]/15 flex items-center justify-center text-[#A31C18] shrink-0">
+                <MapPin size={13} className="text-[#A31C18]" />
+              </div>
+              <span className="font-medium text-slate-300">Pilot Market: Pune, Maharashtra</span>
             </div>
           </div>
 
-          {/* 2. Platform Links */}
-          <div className="space-y-3">
-            <h4 className="text-white text-xs font-heading font-bold uppercase tracking-wider">
-              Explore Platform
+          {/* COLUMN 2 — EXPLORE PLATFORM (27.5% on desktop: 4/12 cols) */}
+          <nav aria-label="Explore Platform" className="lg:col-span-4 space-y-4 text-left">
+            <h4 className="font-heading font-bold text-white text-xs uppercase tracking-wider">
+              EXPLORE PLATFORM
             </h4>
-            <ul className="space-y-2 text-xs font-medium">
+            <ul className="space-y-2.5 text-xs font-medium">
               <li>
-                <Link to="/cars" className="hover:text-white transition-colors">
+                <Link
+                  to="/cars"
+                  className="text-[#A3A3A3] hover:text-white hover:underline transition-colors duration-200 inline-block py-0.5"
+                >
                   Vehicle Showroom
                 </Link>
               </li>
               <li>
-                <Link to="/groups" className="hover:text-white transition-colors">
+                <Link
+                  to="/groups"
+                  className="text-[#A3A3A3] hover:text-white hover:underline transition-colors duration-200 inline-block py-0.5"
+                >
                   Active Demand Groups
                 </Link>
               </li>
               <li>
-                <Link to="/how-it-works" className="hover:text-white transition-colors">
+                <Link
+                  to="/how-it-works"
+                  className="text-[#A3A3A3] hover:text-white hover:underline transition-colors duration-200 inline-block py-0.5"
+                >
                   How Group Buying Works
                 </Link>
               </li>
               <li>
-                <Link to="/login" className="hover:text-white transition-colors">
+                <Link
+                  to="/login"
+                  className="text-[#A3A3A3] hover:text-white hover:underline transition-colors duration-200 inline-block py-0.5"
+                >
                   Portal Sign In
                 </Link>
               </li>
-              <li>
-                <Link to="/register" className="hover:text-white transition-colors">
-                  Create an Account
+              {/* Secondary CTA: Create an Account */}
+              <li className="pt-1.5">
+                <Link
+                  to="/register"
+                  className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-lg bg-white/[0.05] hover:bg-[#A31C18]/20 border border-white/10 hover:border-[#A31C18]/50 text-xs font-semibold text-white hover:text-white transition-all duration-200 group shadow-sm"
+                >
+                  <span>Create an Account</span>
+                  <ArrowRight
+                    size={13}
+                    className="text-[#A31C18] group-hover:translate-x-0.5 transition-transform duration-200"
+                  />
                 </Link>
               </li>
             </ul>
-          </div>
+          </nav>
 
-          {/* 3. Trust & Security */}
-          <div className="space-y-3">
-            <h4 className="text-white text-xs font-heading font-bold uppercase tracking-wider">
-              Trust & Privacy
-            </h4>
-            <div className="space-y-3 text-xs text-[#71717A] leading-relaxed">
-              <div className="flex items-start gap-2 text-[#22C55E] font-medium">
-                <ShieldCheck className="w-4 h-4 shrink-0 mt-0.5" />
-                <span>100% Authorized OEM Franchise Dealerships Only</span>
-              </div>
-              <p className="text-[11px]">
-                Your personal details are never shared with dealerships without explicit DPDP Act 2023 consent upon quotation acceptance.
-              </p>
-              <div className="pt-2 flex items-center gap-4 text-[11px]">
-                <Link to="/privacy" className="hover:text-white transition-colors underline">
-                  Privacy Policy
-                </Link>
-                <Link to="/terms" className="hover:text-white transition-colors underline">
-                  Terms of Protocol
-                </Link>
+          {/* COLUMN 3 — LEGAL, SUPPORT & SOCIAL (27.5% on desktop: 3/12 cols) */}
+          <div className="lg:col-span-3 space-y-6 text-left">
+            {/* Legal & Support Links */}
+            <div className="space-y-4">
+              <h4 className="font-heading font-bold text-white text-xs uppercase tracking-wider">
+                LEGAL &amp; SUPPORT
+              </h4>
+              <ul className="space-y-2.5 text-xs font-medium">
+                <li>
+                  <Link
+                    to="/privacy"
+                    className="text-[#A3A3A3] hover:text-white hover:underline transition-colors duration-200 inline-block py-0.5"
+                  >
+                    Privacy Policy
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="/terms"
+                    className="text-[#A3A3A3] hover:text-white hover:underline transition-colors duration-200 inline-block py-0.5"
+                  >
+                    Terms &amp; Conditions
+                  </Link>
+                </li>
+                <li>
+                  <a
+                    href="mailto:support@drivedeals.in"
+                    className="text-[#A3A3A3] hover:text-white hover:underline transition-colors duration-200 inline-block py-0.5"
+                  >
+                    Contact Us
+                  </a>
+                </li>
+              </ul>
+            </div>
+
+            {/* Social Media Section */}
+            <div className="pt-2 border-t border-white/10 space-y-3">
+              <h4 className="font-heading font-bold text-white text-xs uppercase tracking-wider">
+                CONNECT WITH US
+              </h4>
+              <div className="flex items-center gap-3">
+                {/* YouTube */}
+                <a
+                  href="https://youtube.com/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-9 h-9 rounded-lg bg-white/[0.04] hover:bg-[#A31C18]/15 border border-white/10 hover:border-[#A31C18]/40 flex items-center justify-center text-[#A3A3A3] hover:text-[#A31C18] transition-all duration-200 hover:scale-105"
+                  aria-label="YouTube"
+                  title="YouTube"
+                >
+                  <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
+                  </svg>
+                </a>
+
+                {/* Instagram */}
+                <a
+                  href="https://instagram.com/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-9 h-9 rounded-lg bg-white/[0.04] hover:bg-[#A31C18]/15 border border-white/10 hover:border-[#A31C18]/40 flex items-center justify-center text-[#A3A3A3] hover:text-[#A31C18] transition-all duration-200 hover:scale-105"
+                  aria-label="Instagram"
+                  title="Instagram"
+                >
+                  <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
+                  </svg>
+                </a>
+
+                {/* Facebook */}
+                <a
+                  href="https://facebook.com/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-9 h-9 rounded-lg bg-white/[0.04] hover:bg-[#A31C18]/15 border border-white/10 hover:border-[#A31C18]/40 flex items-center justify-center text-[#A3A3A3] hover:text-[#A31C18] transition-all duration-200 hover:scale-105"
+                  aria-label="Facebook"
+                  title="Facebook"
+                >
+                  <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+                  </svg>
+                </a>
+
+                {/* LinkedIn */}
+                <a
+                  href="https://linkedin.com/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-9 h-9 rounded-lg bg-white/[0.04] hover:bg-[#A31C18]/15 border border-white/10 hover:border-[#A31C18]/40 flex items-center justify-center text-[#A3A3A3] hover:text-[#A31C18] transition-all duration-200 hover:scale-105"
+                  aria-label="LinkedIn"
+                  title="LinkedIn"
+                >
+                  <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
+                  </svg>
+                </a>
               </div>
             </div>
           </div>
-        </div>
 
-        {/* Bottom Bar */}
-        <div className="mt-12 pt-6 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-3 text-[11px] text-[#71717A]">
-          <div>
-            &copy; {new Date().getFullYear()} DriveDeals Technologies Pvt Ltd. All rights reserved.
-          </div>
-          <div className="font-mono">
-            Direct Fleet Collective • Production Release
-          </div>
+        </div>
+      </div>
+
+      {/* SECTION 4 — COPYRIGHT SECTION (Separated with subtle divider) */}
+      <div className="border-t border-white/10 w-full">
+        <div className="w-full px-6 sm:px-10 lg:px-16 xl:px-20 max-w-[1720px] mx-auto py-6">
+          <p className="text-center text-xs text-[#A3A3A3] font-normal leading-relaxed">
+            &copy; 2026 DriveDeals. Developed by Pratik Shirish Patil. All rights reserved.
+          </p>
         </div>
       </div>
     </footer>
   );
 };
+
+export default Footer;

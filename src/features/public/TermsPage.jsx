@@ -35,7 +35,7 @@ export const TermsPage = () => {
             <h2 className="text-lg font-heading font-black">1. Platform Nature & Scope</h2>
           </div>
           <p>
-            DriveDeals Technologies Private Limited operates solely as an independent automotive demand coordination, reverse-discovery, and quotation auditing technology platform.
+            DriveDeals operates solely as an independent automotive demand coordination, reverse-discovery, and quotation auditing technology platform developed by Pratik Shirish Patil.
           </p>
           <p>
             DriveDeals is <strong className="text-white">not</strong> an automobile dealership, OEM motor manufacturer, insurance agent, or direct banking institution. DriveDeals never takes physical possession of vehicles, does not collect purchase monies or token advance booking amounts on behalf of dealers, and does not charge retail buyers subscription or commission fees.

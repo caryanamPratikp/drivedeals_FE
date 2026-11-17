@@ -221,8 +221,8 @@ export const AuthPage = ({ defaultTab = 'login' }) => {
       </main>
 
       {/* Subtle Bottom Footer */}
-      <footer className="relative z-10 w-full px-6 sm:px-10 lg:px-16 py-4 flex items-center justify-between text-[11px] text-[#71717A] border-t border-white/5">
-        <span>&copy; {new Date().getFullYear()} DriveDeals Technologies Pvt. Ltd.</span>
+      <footer className="relative z-10 w-full px-6 sm:px-10 lg:px-16 py-4 flex flex-col sm:flex-row items-center justify-between gap-2 text-[11px] text-[#A3A3A3] border-t border-white/5">
+        <span>&copy; 2026 DriveDeals. Developed by Pratik Shirish Patil. All rights reserved.</span>
         <span>100% Spam-Free Privacy Shield</span>
       </footer>
 
