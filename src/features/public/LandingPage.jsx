@@ -796,29 +796,27 @@ export const LandingPage = () => {
                 onStartGroup={() => navigate('/cars')}
               />
 
-              {/* Genuine Showroom Car Discovery Cards (Rule 4D: Not labeled as active deals) */}
-              <div className="space-y-6 pt-4">
-                <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-white/10 pb-4">
-                  <div className="space-y-1">
-                    <div className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-[#ED1725]">
-                      <Car size={13} /> Genuine Showroom Inventory
+              {/* Genuine Showroom Car Discovery Cards (Only shown when live cars exist in DB) */}
+              {liveCars.length > 0 ? (
+                <div className="space-y-6 pt-4">
+                  <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-white/10 pb-4">
+                    <div className="space-y-1">
+                      <div className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-[#ED1725]">
+                        <Car size={13} /> Genuine Showroom Inventory
+                      </div>
+                      <h3 className="text-2xl sm:text-3xl font-heading font-black text-white tracking-tight">
+                        Available Showroom Models in {selectedCity}
+                      </h3>
+                      <p className="text-xs sm:text-sm text-[#A1A1AA]">
+                        Select any vehicle below to create the first demand group in your city.
+                      </p>
                     </div>
-                    <h3 className="text-2xl sm:text-3xl font-heading font-black text-white tracking-tight">
-                      Available Showroom Models in {selectedCity}
-                    </h3>
-                    <p className="text-xs sm:text-sm text-[#A1A1AA]">
-                      Select any vehicle below to create the first demand group in your city.
-                    </p>
+
+                    <Link to="/cars" className="text-xs font-bold text-[#ED1725] hover:underline flex items-center gap-1 shrink-0">
+                      <span>Explore All Models ({liveCars.length})</span>
+                      <ChevronRight size={14} />
+                    </Link>
                   </div>
-
-                  <Link to="/cars" className="text-xs font-bold text-[#ED1725] hover:underline flex items-center gap-1 shrink-0">
-                    <span>Explore All Models ({liveCars.length})</span>
-                    <ChevronRight size={14} />
-                  </Link>
-                </div>
-
-                {/* If Catalogue has cars */}
-                {liveCars.length > 0 ? (
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                     {liveCars.slice(0, 4).map((car) => (
                       <div
@@ -871,15 +869,15 @@ export const LandingPage = () => {
                       </div>
                     ))}
                   </div>
-                ) : (
-                  /* Rule 4G: When Catalogue is empty */
-                  <EmptyCatalogueState
-                    onRetry={fetchCars}
-                    isAdmin={currentUser?.role === 'ROLE_ADMIN'}
-                    onAdminAction={() => navigate('/admin/catalogue')}
-                  />
-                )}
-              </div>
+                </div>
+              ) : (
+                /* Rule 4G: When Catalogue is empty */
+                <EmptyCatalogueState
+                  onRetry={fetchCars}
+                  isAdmin={currentUser?.role === 'ROLE_ADMIN'}
+                  onAdminAction={() => navigate('/admin/catalogue')}
+                />
+              )}
             </div>
           )}
 

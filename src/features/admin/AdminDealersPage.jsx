@@ -125,7 +125,7 @@ export const AdminDealersPage = () => {
                         <div className="font-medium text-white">{dealer.address || dealer.city || 'Regional Outlet'}</div>
                         <div className="text-[11px] text-slate-500 mt-0.5">
                           {dealer.displayContactName || dealer.contactPerson || 'Dealership Mgr'} •{' '}
-                          <span className="font-mono">{dealer.phone || dealer.mockPhone || '-'}</span>
+                          <span className="font-mono">{dealer.phone || '-'}</span>
                         </div>
                       </td>
 

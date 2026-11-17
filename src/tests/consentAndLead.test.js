@@ -2,7 +2,33 @@ import { describe, it, expect, beforeEach } from 'vitest';
 import { useAppStore } from '../store';
 describe('Explicit Consent & Lead Creation Store Operations', () => {
     beforeEach(() => {
-        useAppStore.getState().resetDemoData();
+        useAppStore.setState({
+            consents: [
+                {
+                    id: 'cst-priya',
+                    buyerId: 'user-priya',
+                    dealerId: 'dealer-pune-auto',
+                    groupId: 'grp-nexon-offers-demo',
+                    status: 'ACTIVE',
+                },
+            ],
+            leads: [
+                {
+                    id: 'lead_seed_active',
+                    buyerId: 'user-priya',
+                    dealerId: 'dealer-pune-auto',
+                    groupId: 'grp-nexon-offers-demo',
+                    status: 'CONTACTED',
+                },
+            ],
+            dealers: [
+                { id: 'dealer-pune-auto', status: 'VERIFIED' },
+                { id: 'dealer-western-wheels', status: 'SUSPENDED' },
+            ],
+            quotationVersions: [
+                { id: 'ver-nexon-pune-v2', status: 'PUBLISHED' },
+            ],
+        });
     });
     it('creates an authorized lead with DEMO_DELIVERED status upon explicit consent', () => {
         const store = useAppStore.getState();

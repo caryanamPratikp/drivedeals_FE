@@ -1028,31 +1028,10 @@ export const useAppStore = create((set, get) => ({
   // Test helper compatibility
   resetDemoData: () => {
     set({
-      consents: [
-        {
-          id: 'cst-priya',
-          buyerId: 'user-priya',
-          dealerId: 'dealer-pune-auto',
-          groupId: 'grp-nexon-offers-demo',
-          status: 'ACTIVE',
-        },
-      ],
-      leads: [
-        {
-          id: 'lead_seed_active',
-          buyerId: 'user-priya',
-          dealerId: 'dealer-pune-auto',
-          groupId: 'grp-nexon-offers-demo',
-          status: 'CONTACTED',
-        },
-      ],
-      dealers: [
-        { id: 'dealer-pune-auto', status: 'VERIFIED' },
-        { id: 'dealer-western-wheels', status: 'SUSPENDED' },
-      ],
-      quotationVersions: [
-        { id: 'ver-nexon-pune-v2', status: 'PUBLISHED' },
-      ],
+      consents: [],
+      leads: [],
+      dealers: [],
+      quotationVersions: [],
     });
   },
 }));
