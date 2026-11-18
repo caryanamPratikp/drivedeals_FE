@@ -83,7 +83,7 @@ export const NotificationPopover = ({
 
           {/* Footer */}
           <div className="p-3 bg-black/40 border-t border-white/5 text-center text-[11px] text-[#A1A1AA]">
-            Automated Escrow & Deal Engine • Pune Node
+            Automated Group Buying & Deal Engine • Pune Node
           </div>
         </motion.div>
       </div>

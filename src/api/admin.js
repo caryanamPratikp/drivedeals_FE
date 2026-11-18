@@ -34,3 +34,7 @@ export async function fetchAdminLeads() {
 export async function fetchAdminAudit() {
   return apiClient('/admin/audit');
 }
+
+export async function fetchAdminNotifications() {
+  return apiClient('/admin/notifications');
+}

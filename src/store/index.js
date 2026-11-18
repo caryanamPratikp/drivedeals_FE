@@ -18,6 +18,7 @@ import {
   fetchAdminGroups,
   fetchAdminLeads,
   fetchAdminAudit,
+  fetchAdminNotifications,
 } from '../api';
 
 import {
@@ -125,6 +126,7 @@ export const useAppStore = create((set, get) => ({
   groupsFetched: false,
   adminLoading: false,
   adminFetched: false,
+  adminNotifications: [],
   adminAnalytics: {
     totalBuyers: 0,
     totalDealers: 0,
@@ -1151,6 +1153,18 @@ export const useAppStore = create((set, get) => ({
     }
   },
 
+  fetchAdminNotifications: async () => {
+    try {
+      const notifications = await fetchAdminNotifications();
+      if (Array.isArray(notifications)) {
+        set({ adminNotifications: notifications });
+        return notifications;
+      }
+    } catch (err) {
+      console.warn('Backend admin notifications fallback:', err);
+    }
+  },
+
   fetchAdminOverview: async () => {
     set({ adminLoading: true });
     try {
@@ -1160,6 +1174,7 @@ export const useAppStore = create((set, get) => ({
         get().fetchAdminUsers(),
         get().fetchAdminLeads(),
         get().fetchAdminAuditEvents(),
+        get().fetchAdminNotifications(),
         get().fetchCars(),
         get().fetchGroups(),
       ]);

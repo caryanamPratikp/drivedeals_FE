@@ -213,7 +213,7 @@ export const SavingsScreen = ({
               Active Deal & Savings Goals
             </h3>
             <p className="text-xs text-[#A1A1AA]">
-              Monitor collective booking thresholds and escrow accumulation
+              Monitor collective demand thresholds and group buyer savings
             </p>
           </div>
         </div>
@@ -526,7 +526,7 @@ export const SavingsScreen = ({
         </div>
       </motion.div>
 
-      {/* 5.F Round-Ups / Escrow Buffer Component */}
+      {/* 5.F Round-Ups / Collective Buffer Component */}
       <motion.div
         variants={staggerItem}
         className="rounded-3xl bg-gradient-to-b from-[#17191D] to-[#111315] p-6 sm:p-8 border border-white/5 shadow-2xl flex flex-col lg:flex-row lg:items-center justify-between gap-6"
@@ -538,15 +538,15 @@ export const SavingsScreen = ({
             </div>
             <div>
               <h3 className="text-base sm:text-lg font-heading font-bold text-white">
-                Automated Round-Up Escrow Buffer
+                Automated Collective Savings Buffer
               </h3>
               <p className="text-xs text-[#A1A1AA]">
-                Rounds booking tokens to nearest ₹100 into zero-risk treasury buffer
+                Compounds buyer volume savings across verified regional cohorts
               </p>
             </div>
           </div>
           <p className="text-xs text-slate-400 max-w-xl leading-relaxed pt-1">
-            Whenever buyers place token bookings or dealership deposits, DriveDeals micro-rounds the payment into your collective escrow pool, compounding risk protection.
+            Whenever buyers join deal groups and secure collective offers, DriveDeals tracks and compounds your group volume discounts, maximizing collective bargaining power.
           </p>
         </div>
 

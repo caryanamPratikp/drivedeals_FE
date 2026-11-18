@@ -30,8 +30,8 @@ export const mockFinanceData = {
       accentColor: '#22C55E',
     },
     {
-      id: 'active-escrow-buyers',
-      title: 'Active Buyers in Escrow',
+      id: 'active-buyers',
+      title: 'Active Registered Buyers',
       amount: 148,
       formattedAmount: '148 Buyers',
       compactAmount: '148 Units',
@@ -59,9 +59,9 @@ export const mockFinanceData = {
 
   // Section 4.C Account Details Card
   accountDetails: {
-    accountHolder: 'DriveDeals Escrow Operations Pvt',
+    accountHolder: 'DriveDeals Group Buying Platform',
     accountNumber: '•••• •••• •••• 9904',
-    accountType: 'Institutional Fleet Escrow Account',
+    accountType: 'Platform Operations Account',
     status: 'Active & Verified',
     clearingHouse: 'HDFC Treasury Node MH-12',
     lastRecipient: {
@@ -179,13 +179,13 @@ export const mockFinanceData = {
     ],
   },
 
-  // Section 4.G Everyday Bank / Escrow Card
+  // Section 4.G Platform Operations Card
   bankCard: {
-    cardName: 'DriveDeals Commercial Fleet Visa',
+    cardName: 'DriveDeals Commercial Visa',
     cardHolder: 'PRATIK SHIRISH PATIL',
     maskedNumber: '•••• •••• •••• 8824',
     expiry: '09/29',
-    cardType: 'Platinum Fleet Escrow',
+    cardType: 'Platinum Business',
     status: 'ACTIVE',
     dailyLimit: '₹2,50,00,000',
     availableLimit: '₹1,94,40,000',
@@ -322,7 +322,7 @@ export const mockFinanceData = {
     recentTransactions: [
       { id: 'ru-1', title: 'Tata Nexon Booking Token', rawAmount: 9900, rounded: 10000, saved: 100, time: '2h ago' },
       { id: 'ru-2', title: 'Hyundai Creta Verification Fee', rawAmount: 1850, rounded: 1900, saved: 50, time: '5h ago' },
-      { id: 'ru-3', title: 'Mahindra Escrow Deposit', rawAmount: 49800, rounded: 50000, saved: 200, time: '1d ago' },
+      { id: 'ru-3', title: 'Mahindra Collective Deposit', rawAmount: 49800, rounded: 50000, saved: 200, time: '1d ago' },
     ],
   },
 
@@ -346,7 +346,7 @@ export const mockFinanceData = {
     },
     {
       id: 'notif-3',
-      type: 'escrow',
+      type: 'settlement',
       title: 'Settlement Disbursed',
       message: '₹18,40,000 successfully settled to Kothari Hyundai Treasury.',
       time: '2h ago',

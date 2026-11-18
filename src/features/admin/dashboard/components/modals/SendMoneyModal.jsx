@@ -7,7 +7,7 @@ export const SendMoneyModal = ({ isOpen, onClose, defaultRecipient = null }) => 
     defaultRecipient ? defaultRecipient.name : 'Kothari Hyundai - Baner Outlets'
   );
   const [amount, setAmount] = useState('1840000');
-  const [purpose, setPurpose] = useState('Fleet Escrow Settlement');
+  const [purpose, setPurpose] = useState('Dealership Collective Settlement');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [error, setError] = useState('');
@@ -67,7 +67,7 @@ export const SendMoneyModal = ({ isOpen, onClose, defaultRecipient = null }) => 
               </div>
               <div>
                 <h3 className="text-base font-heading font-black text-white">
-                  Execute Escrow Disbursal
+                  Execute Dealership Disbursal
                 </h3>
                 <p className="text-xs text-[#A1A1AA]">
                   DriveDeals Authorized Dealership Clearing Node

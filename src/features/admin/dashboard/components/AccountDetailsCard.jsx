@@ -24,7 +24,7 @@ export const AccountDetailsCard = ({
             </div>
             <div>
               <h3 className="text-sm font-heading font-bold text-white tracking-wide">
-                Account & Escrow Details
+                Platform Account Details
               </h3>
               <p className="text-[11px] text-[#A1A1AA]">{accountType}</p>
             </div>
@@ -38,11 +38,11 @@ export const AccountDetailsCard = ({
         {/* Account Meta Grid */}
         <div className="bg-black/30 rounded-xl p-3.5 border border-white/5 space-y-2 mb-5">
           <div className="flex items-center justify-between text-xs">
-            <span className="text-[#A1A1AA]">Escrow Entity</span>
+            <span className="text-[#A1A1AA]">Platform Entity</span>
             <span className="text-white font-medium">{accountHolder}</span>
           </div>
           <div className="flex items-center justify-between text-xs">
-            <span className="text-[#A1A1AA]">Escrow Node ID</span>
+            <span className="text-[#A1A1AA]">Account Node ID</span>
             <span className="text-white font-mono">{accountNumber}</span>
           </div>
           <div className="flex items-center justify-between text-xs">

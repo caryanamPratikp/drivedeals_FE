@@ -44,9 +44,11 @@ export const AdminDashboard = () => {
     users = [],
     leads = [],
     auditEvents = [],
+    adminNotifications = [],
     adminLoading = false,
     fetchAdminOverview,
     fetchCars,
+    fetchAdminNotifications,
     reviewDealerApplication,
   } = useAppStore();
 
@@ -61,8 +63,14 @@ export const AdminDashboard = () => {
   const [isAddGoalOpen, setIsAddGoalOpen] = useState(false);
   const [selectedRecipient, setSelectedRecipient] = useState(null);
 
-  // Dynamic Notifications State
-  const [notificationsList, setNotificationsList] = useState(mockFinanceData.notifications);
+  // Dynamic Notifications State from DB
+  const [notificationsList, setNotificationsList] = useState([]);
+  useEffect(() => {
+    if (Array.isArray(adminNotifications)) {
+      setNotificationsList(adminNotifications);
+    }
+  }, [adminNotifications]);
+
   const unreadCount = notificationsList.filter((n) => !n.read).length;
 
   // Local Goals State for Savings Screen
@@ -74,7 +82,10 @@ export const AdminDashboard = () => {
     if (fetchCars) {
       fetchCars();
     }
-  }, [fetchAdminOverview, fetchCars]);
+    if (fetchAdminNotifications) {
+      fetchAdminNotifications();
+    }
+  }, [fetchAdminOverview, fetchCars, fetchAdminNotifications]);
 
   // Global keyboard shortcut: Ctrl+K or Cmd+K for search
   useEffect(() => {
@@ -150,7 +161,7 @@ export const AdminDashboard = () => {
       isCurrency: true,
     },
     {
-      id: 'active-escrow-buyers',
+      id: 'active-buyers',
       title: 'Registered Buyers in DB',
       amount: realBuyers,
       formattedAmount: `${realBuyers} Buyers`,
@@ -180,9 +191,9 @@ export const AdminDashboard = () => {
   // 3. Dynamic Account & Recipient Details from DB dealers
   const verifiedOrFirstDealer = dealers.find((d) => d.verificationStatus === 'VERIFIED' || d.status === 'VERIFIED') || dealers[0] || null;
   const dynamicAccountDetails = {
-    accountHolder: 'DriveDeals Escrow Operations Pvt',
+    accountHolder: 'DriveDeals Group Buying Platform',
     accountNumber: '•••• •••• •••• 9904',
-    accountType: 'Institutional Fleet Escrow Account',
+    accountType: 'Group Buying Operations Account',
     status: 'Active & Verified',
     clearingHouse: 'HDFC Treasury Node MH-12',
     lastRecipient: verifiedOrFirstDealer
@@ -342,7 +353,7 @@ export const AdminDashboard = () => {
             </h1>
 
             <p className="text-xs sm:text-sm text-slate-400 font-normal max-w-xl leading-relaxed">
-              Real-time collective volume concessions, Pune dealership verification queues, and institutional escrow settlement pipelines.
+              Real-time collective volume concessions, Pune dealership verification queues, and group buying demand aggregation.
             </p>
           </div>
 

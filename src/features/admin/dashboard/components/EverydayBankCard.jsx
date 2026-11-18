@@ -127,7 +127,7 @@ export const EverydayBankCard = ({ bankCard, hideAmounts = false }) => {
                     <span className="text-white font-mono font-bold">{dailyLimit}</span>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-[#A1A1AA]">Available Escrow Room</span>
+                    <span className="text-[#A1A1AA]">Available Limit Buffer</span>
                     <span className="text-emerald-400 font-mono font-bold">
                       {hideAmounts ? '••••••••' : availableLimit}
                     </span>
