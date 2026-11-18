@@ -103,14 +103,25 @@ export const AdminDashboard = () => {
     setCustomGoals((prev) => [newGoal, ...prev]);
   };
 
-  // 1. Real DB-derived Metrics
+  // 1. Real DB-derived Metrics (Strictly excluding Admin from Buyer, Dealer, and Platform User counts)
+  const nonAdminUsers = (users || []).filter((u) => u && u.role !== 'ADMIN');
   const realGMV = Number(adminAnalytics?.totalGMV ?? 0);
   const realSavings = Number(adminAnalytics?.totalSavings ?? 0);
-  const realBuyers = adminAnalytics?.totalBuyers ?? users.filter((u) => u.role === 'BUYER').length;
-  const realDealers = adminAnalytics?.totalDealers ?? dealers.length;
-  const realVerifiedDealers = adminAnalytics?.verifiedDealers ?? dealers.filter((d) => d.verificationStatus === 'VERIFIED' || d.status === 'VERIFIED').length;
-  const realActiveGroups = adminAnalytics?.totalActiveGroups ?? groups.filter((g) => g.status !== 'CLOSED' && g.stage !== 'CLOSED').length;
-  const realLeads = adminAnalytics?.totalLeads ?? leads.length;
+  const realBuyers = adminAnalytics?.totalBuyers !== undefined
+    ? Number(adminAnalytics.totalBuyers)
+    : nonAdminUsers.filter((u) => u.role === 'BUYER').length;
+  const realDealers = adminAnalytics?.totalDealers !== undefined
+    ? Number(adminAnalytics.totalDealers)
+    : (dealers.length || nonAdminUsers.filter((u) => u.role === 'DEALER').length);
+  const realVerifiedDealers = adminAnalytics?.verifiedDealers !== undefined
+    ? Number(adminAnalytics.verifiedDealers)
+    : dealers.filter((d) => d.verificationStatus === 'VERIFIED' || d.status === 'VERIFIED').length;
+  const realActiveGroups = adminAnalytics?.totalActiveGroups !== undefined
+    ? Number(adminAnalytics.totalActiveGroups)
+    : groups.filter((g) => g.status !== 'CLOSED' && g.stage !== 'CLOSED').length;
+  const realLeads = adminAnalytics?.totalLeads !== undefined
+    ? Number(adminAnalytics.totalLeads)
+    : leads.length;
 
   const gmvFormatted = realGMV >= 10000000
     ? `₹${(realGMV / 10000000).toFixed(2)} Cr`
@@ -163,7 +174,7 @@ export const AdminDashboard = () => {
       formattedAmount: `${realBuyers} Buyers • ${realDealers} Dealers`,
       changePercent: realBuyers + realDealers > 0 ? 14.8 : 0,
       trend: 'up',
-      period: `${users.length} total accounts in DB`,
+      period: `${nonAdminUsers.length} platform users in DB (excl. admin)`,
       sparkline: [Math.max(0, realBuyers - 2), realBuyers, realBuyers + realDealers, realBuyers + realDealers],
       iconName: 'Users',
       accentColor: '#38BDF8',

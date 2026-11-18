@@ -36,15 +36,21 @@ export const AdminUsersPage = () => {
     fetchAdminUsers();
   }, [fetchAdminUsers]);
 
-  // Counts
-  const buyersCount = useMemo(() => users.filter((u) => u.role === 'BUYER').length, [users]);
-  const dealersCount = useMemo(() => users.filter((u) => u.role === 'DEALER').length, [users]);
-  const adminsCount = useMemo(() => users.filter((u) => u.role === 'ADMIN').length, [users]);
+  // Platform users strictly excluding Administrator
+  const platformUsers = useMemo(() => (users || []).filter((u) => u && u.role !== 'ADMIN'), [users]);
+  const buyersCount = useMemo(() => platformUsers.filter((u) => u.role === 'BUYER').length, [platformUsers]);
+  const dealersCount = useMemo(() => platformUsers.filter((u) => u.role === 'DEALER').length, [platformUsers]);
+  const adminsCount = useMemo(() => (users || []).filter((u) => u && u.role === 'ADMIN').length, [users]);
 
-  // Filter and search
+  // Filter and search (All Users strictly lists Buyers & Dealers, excluding Admin)
   const filteredUsers = useMemo(() => {
-    return users.filter((u) => {
-      // Role filter
+    return (users || []).filter((u) => {
+      if (!u) return false;
+
+      // Role filter: 'ALL' shows platform buyers and dealers (never admin)
+      if (activeFilter === 'ALL' && u.role === 'ADMIN') {
+        return false;
+      }
       if (activeFilter !== 'ALL' && u.role !== activeFilter) {
         return false;
       }
@@ -123,7 +129,7 @@ export const AdminUsersPage = () => {
         <div className="flex items-center gap-2 self-start sm:self-auto">
           <div className="px-3.5 py-2 rounded-2xl bg-white/5 border border-white/10 text-xs font-mono text-slate-300 flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-            <span>{users.length} Total Users in DB</span>
+            <span>{platformUsers.length} Platform Users in DB</span>
           </div>
         </div>
       </motion.div>
@@ -144,7 +150,7 @@ export const AdminUsersPage = () => {
             >
               <Users size={14} className={activeFilter === 'ALL' ? 'text-white' : 'text-[#A1A1AA]'} />
               <span>All Users</span>
-              <span className="text-[10px] font-mono text-slate-300">({users.length})</span>
+              <span className="text-[10px] font-mono text-slate-300">({platformUsers.length})</span>
             </button>
 
             <button
