@@ -105,7 +105,7 @@ export const TermsPage = () => {
         <div className="rounded-2xl bg-[#090B0D] border border-white/10 p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
             <div className="text-sm font-heading font-bold text-white">Have questions regarding our terms?</div>
-            <div className="text-xs text-[#71717A] mt-0.5">Reach out to legal@drivedeals.in</div>
+            <div className="text-xs text-[#71717A] mt-0.5">Reach out to pratiksp024@gmail.com</div>
           </div>
           <Link
             to="/cars"

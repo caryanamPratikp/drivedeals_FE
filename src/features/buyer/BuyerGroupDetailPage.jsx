@@ -21,6 +21,7 @@ import { formatINR } from '../../lib/currency';
 import { formatDate } from '../../lib/dates';
 import { StatusBadge } from '../../components/common/StatusBadge';
 import { PrimaryButton, SecondaryButton } from '../../components/common/Buttons';
+import { SignInRequiredModal } from '../../components/common/SignInRequiredModal';
 
 export const BuyerGroupDetailPage = () => {
   const { groupId } = useParams();
@@ -61,6 +62,14 @@ export const BuyerGroupDetailPage = () => {
 
   const [activeTab, setActiveTab] = useState('OVERVIEW');
   const [signalFeedback, setSignalFeedback] = useState(null);
+  const [authModalOpen, setAuthModalOpen] = useState(false);
+
+  const isAuthenticated = Boolean(
+    currentUser?.id &&
+    currentUser?.id !== 'guest' &&
+    currentUser?.role &&
+    currentUser?.role !== 'PUBLIC'
+  );
   const group = groups.find((g) => g.id === groupId);
   const variant = group?.variant || variants.find((v) => v.id === group?.variantId) || { name: 'Standard Trim', keyFeatures: [] };
   const car = group?.car || cars.find((c) => c.id === variant?.carId || c.id === group?.carId) || { brand: 'Vehicle', modelName: 'Model', model: 'Model' };
@@ -165,8 +174,8 @@ export const BuyerGroupDetailPage = () => {
 
   const [joinLoading, setJoinLoading] = useState(false);
   const handleJoinToggle = async () => {
-    if (!currentUser || currentUser.role !== 'BUYER') {
-      navigate('/login');
+    if (!isAuthenticated) {
+      setAuthModalOpen(true);
       return;
     }
     try {
@@ -262,7 +271,13 @@ export const BuyerGroupDetailPage = () => {
           return (
             <button
               key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
+              onClick={() => {
+                if (tab.id === 'OFFERS' && !isAuthenticated) {
+                  setAuthModalOpen(true);
+                } else {
+                  setActiveTab(tab.id);
+                }
+              }}
               className={`relative pb-3 px-4 text-xs sm:text-sm font-bold transition-colors flex items-center gap-2 whitespace-nowrap cursor-pointer ${
                 isActive ? 'text-white' : 'text-[#A1A1AA] hover:text-white'
               }`}
@@ -764,6 +779,20 @@ export const BuyerGroupDetailPage = () => {
           )}
         </div>
       )}
+
+      {/* Sign In Required Overlay Popup Modal */}
+      <SignInRequiredModal
+        isOpen={authModalOpen}
+        onClose={() => setAuthModalOpen(false)}
+        title="Sign In Required to View Quotes"
+        message="Dealership quotations, itemized on-road discounts, and collective member bids are exclusive to registered members to protect dealer pricing and buyer privacy."
+        redirectPath={`/groups/${groupId}`}
+        groupTitle={
+          car?.brand
+            ? `${car.brand} ${car.modelName || car.model || ''} (${variant?.name || 'Selected Trim'})`
+            : null
+        }
+      />
     </div>
   );
 };

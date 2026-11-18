@@ -19,11 +19,22 @@ import { formatDate } from '../../lib/dates';
 import { StatusBadge } from '../../components/common/StatusBadge';
 import { PrimaryButton, SecondaryButton } from '../../components/common/Buttons';
 import { EmptyState } from '../../components/common/EmptyState';
+import { SignInRequiredModal } from '../../components/common/SignInRequiredModal';
 import { staggerContainer, staggerItem } from '../../lib/animations';
 
 export const GroupsPage = () => {
   const { groups = [], variants = [], cars = [], currentUser, fetchGroups, fetchCars } = useAppStore();
   const navigate = useNavigate();
+
+  const [authModalOpen, setAuthModalOpen] = useState(false);
+  const [selectedTargetGroup, setSelectedTargetGroup] = useState(null);
+
+  const isAuthenticated = Boolean(
+    currentUser?.id &&
+    currentUser?.id !== 'guest' &&
+    currentUser?.role &&
+    currentUser?.role !== 'PUBLIC'
+  );
 
   useEffect(() => {
     if (groups.length === 0) fetchGroups();
@@ -100,10 +111,20 @@ export const GroupsPage = () => {
   };
 
   const handleStartGroup = () => {
-    if (currentUser?.role !== 'BUYER') {
-      navigate('/login');
+    if (!isAuthenticated) {
+      setSelectedTargetGroup(null);
+      setAuthModalOpen(true);
     } else {
       navigate('/cars');
+    }
+  };
+
+  const handleViewGroup = (group) => {
+    if (!isAuthenticated) {
+      setSelectedTargetGroup(group);
+      setAuthModalOpen(true);
+    } else {
+      navigate(`/groups/${group.id}`);
     }
   };
 
@@ -320,21 +341,34 @@ export const GroupsPage = () => {
 
                 {/* Footer Action */}
                 <div className="p-5 pt-0">
-                  <Link to={`/groups/${group.id}`} className="block w-full">
-                    <PrimaryButton
-                      size="sm"
-                      className="w-full justify-center font-bold"
-                    >
-                      <span>View Collective & Quotes</span>
-                      <ArrowRight size={14} />
-                    </PrimaryButton>
-                  </Link>
+                  <PrimaryButton
+                    size="sm"
+                    onClick={() => handleViewGroup(group)}
+                    className="w-full justify-center font-bold"
+                  >
+                    <span>View Collective & Quotes</span>
+                    <ArrowRight size={14} />
+                  </PrimaryButton>
                 </div>
               </motion.div>
             );
           })}
         </motion.div>
       )}
+
+      {/* Sign In Required Overlay Popup Modal */}
+      <SignInRequiredModal
+        isOpen={authModalOpen}
+        onClose={() => setAuthModalOpen(false)}
+        title="Sign In Required to View Quotes"
+        message="Dealership quotations, itemized on-road discounts, and collective member bids are exclusive to registered members to protect dealer pricing and buyer privacy."
+        redirectPath={selectedTargetGroup ? `/groups/${selectedTargetGroup.id}` : '/groups'}
+        groupTitle={
+          selectedTargetGroup
+            ? `${selectedTargetGroup.car?.brand || 'Car'} ${selectedTargetGroup.car?.modelName || selectedTargetGroup.car?.model || ''} (${selectedTargetGroup.variant?.name || 'Selected Trim'})`
+            : null
+        }
+      />
     </div>
   );
 };

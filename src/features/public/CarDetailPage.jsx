@@ -17,12 +17,23 @@ import {
 import { formatINR } from '../../lib/currency';
 import { StatusBadge } from '../../components/common/StatusBadge';
 import { PrimaryButton, SecondaryButton } from '../../components/common/Buttons';
+import { SignInRequiredModal } from '../../components/common/SignInRequiredModal';
 import { staggerContainer, staggerItem } from '../../lib/animations';
 
 export const CarDetailPage = () => {
   const { carId } = useParams();
   const { cars = [], variants = [], groups = [], currentUser, fetchCars, createGroup } = useAppStore();
   const navigate = useNavigate();
+
+  const [authModalOpen, setAuthModalOpen] = useState(false);
+  const [selectedTargetGroup, setSelectedTargetGroup] = useState(null);
+
+  const isAuthenticated = Boolean(
+    currentUser?.id &&
+    currentUser?.id !== 'guest' &&
+    currentUser?.role &&
+    currentUser?.role !== 'PUBLIC'
+  );
 
   useEffect(() => {
     if (cars.length === 0) {
@@ -63,12 +74,22 @@ export const CarDetailPage = () => {
   );
 
   const handleStartGroup = () => {
-    if (!currentUser?.id || currentUser?.id === 'guest') {
-      navigate('/login');
+    if (!isAuthenticated) {
+      setSelectedTargetGroup(null);
+      setAuthModalOpen(true);
       return;
     }
     if (!selectedVariant) return;
     navigate(`/buyer/groups?openCreate=true&carId=${carId}&createVariantId=${selectedVariant.id}`);
+  };
+
+  const handleViewGroup = (group) => {
+    if (!isAuthenticated) {
+      setSelectedTargetGroup(group);
+      setAuthModalOpen(true);
+    } else {
+      navigate(`/groups/${group.id}`);
+    }
   };
 
   if (!car) {
@@ -269,17 +290,33 @@ export const CarDetailPage = () => {
                   </div>
                 </div>
 
-                <Link to={`/groups/${g.id}`}>
-                  <SecondaryButton size="sm" className="w-full">
-                    <span>View Group</span>
-                    <ArrowRight size={13} />
-                  </SecondaryButton>
-                </Link>
+                <SecondaryButton
+                  size="sm"
+                  onClick={() => handleViewGroup(g)}
+                  className="w-full"
+                >
+                  <span>View Group</span>
+                  <ArrowRight size={13} />
+                </SecondaryButton>
               </div>
             ))}
           </div>
         )}
       </div>
+
+      {/* Sign In Required Overlay Popup Modal */}
+      <SignInRequiredModal
+        isOpen={authModalOpen}
+        onClose={() => setAuthModalOpen(false)}
+        title="Sign In Required to View Quotes"
+        message="Dealership quotations, itemized on-road discounts, and collective member bids are exclusive to registered members to protect dealer pricing and buyer privacy."
+        redirectPath={selectedTargetGroup ? `/groups/${selectedTargetGroup.id}` : `/cars/${carId}`}
+        groupTitle={
+          selectedTargetGroup
+            ? `${car.brand} ${car.modelName || car.model || ''} (${selectedTargetGroup.variant?.name || 'Selected Trim'})`
+            : `${car.brand} ${car.modelName || car.model || ''}`
+        }
+      />
     </div>
   );
 };
