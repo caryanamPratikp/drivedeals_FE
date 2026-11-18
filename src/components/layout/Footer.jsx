@@ -3,6 +3,18 @@ import { Link } from 'react-router-dom';
 import { MapPin, ArrowRight } from 'lucide-react';
 
 export const Footer = ({ id }) => {
+  const handleScrollToTop = () => {
+    try {
+      window.scrollTo({
+        top: 0,
+        left: 0,
+        behavior: 'smooth',
+      });
+    } catch {
+      window.scrollTo(0, 0);
+    }
+  };
+
   return (
     <footer
       id={id}
@@ -15,7 +27,11 @@ export const Footer = ({ id }) => {
           {/* COLUMN 1 — BRAND INTRODUCTION (45% on desktop: 5/12 cols + spacing) */}
           <div className="lg:col-span-5 space-y-4 text-left">
             {/* Logo */}
-            <Link to="/" className="inline-block transition-transform hover:opacity-90">
+            <Link
+              to="/"
+              onClick={handleScrollToTop}
+              className="inline-block transition-transform hover:opacity-90"
+            >
               <img
                 src="/assets/logo/drivedeals-logo.png"
                 alt="DriveDeals"
@@ -38,7 +54,7 @@ export const Footer = ({ id }) => {
               <div className="w-5 h-5 rounded-full bg-[#A31C18]/15 flex items-center justify-center text-[#A31C18] shrink-0">
                 <MapPin size={13} className="text-[#A31C18]" />
               </div>
-              <span className="font-medium text-slate-300">Pilot Market: Pune, Maharashtra</span>
+              <span className="font-medium text-slate-300">Pune, Maharashtra</span>
             </div>
           </div>
 
@@ -51,6 +67,7 @@ export const Footer = ({ id }) => {
               <li>
                 <Link
                   to="/cars"
+                  onClick={handleScrollToTop}
                   className="text-[#A3A3A3] hover:text-white hover:underline transition-colors duration-200 inline-block py-0.5"
                 >
                   Vehicle Showroom
@@ -59,6 +76,7 @@ export const Footer = ({ id }) => {
               <li>
                 <Link
                   to="/groups"
+                  onClick={handleScrollToTop}
                   className="text-[#A3A3A3] hover:text-white hover:underline transition-colors duration-200 inline-block py-0.5"
                 >
                   Active Demand Groups
@@ -67,6 +85,7 @@ export const Footer = ({ id }) => {
               <li>
                 <Link
                   to="/how-it-works"
+                  onClick={handleScrollToTop}
                   className="text-[#A3A3A3] hover:text-white hover:underline transition-colors duration-200 inline-block py-0.5"
                 >
                   How Group Buying Works
@@ -75,6 +94,7 @@ export const Footer = ({ id }) => {
               <li>
                 <Link
                   to="/login"
+                  onClick={handleScrollToTop}
                   className="text-[#A3A3A3] hover:text-white hover:underline transition-colors duration-200 inline-block py-0.5"
                 >
                   Portal Sign In
@@ -84,6 +104,7 @@ export const Footer = ({ id }) => {
               <li className="pt-1.5">
                 <Link
                   to="/register"
+                  onClick={handleScrollToTop}
                   className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-lg bg-white/[0.05] hover:bg-[#A31C18]/20 border border-white/10 hover:border-[#A31C18]/50 text-xs font-semibold text-white hover:text-white transition-all duration-200 group shadow-sm"
                 >
                   <span>Create an Account</span>
@@ -107,6 +128,7 @@ export const Footer = ({ id }) => {
                 <li>
                   <Link
                     to="/privacy"
+                    onClick={handleScrollToTop}
                     className="text-[#A3A3A3] hover:text-white hover:underline transition-colors duration-200 inline-block py-0.5"
                   >
                     Privacy Policy
@@ -115,6 +137,7 @@ export const Footer = ({ id }) => {
                 <li>
                   <Link
                     to="/terms"
+                    onClick={handleScrollToTop}
                     className="text-[#A3A3A3] hover:text-white hover:underline transition-colors duration-200 inline-block py-0.5"
                   >
                     Terms &amp; Conditions
@@ -122,7 +145,7 @@ export const Footer = ({ id }) => {
                 </li>
                 <li>
                   <a
-                    href="mailto:support@drivedeals.in"
+                    href="mailto:pratiksp024@gmail.com"
                     className="text-[#A3A3A3] hover:text-white hover:underline transition-colors duration-200 inline-block py-0.5"
                   >
                     Contact Us
@@ -139,7 +162,7 @@ export const Footer = ({ id }) => {
               <div className="flex items-center gap-3">
                 {/* YouTube */}
                 <a
-                  href="https://youtube.com/"
+                  href="https://www.youtube.com/@SPWorld2001"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-9 h-9 rounded-lg bg-white/[0.04] hover:bg-[#A31C18]/15 border border-white/10 hover:border-[#A31C18]/40 flex items-center justify-center text-[#A3A3A3] hover:text-[#A31C18] transition-all duration-200 hover:scale-105"
@@ -153,7 +176,7 @@ export const Footer = ({ id }) => {
 
                 {/* Instagram */}
                 <a
-                  href="https://instagram.com/"
+                  href="https://www.instagram.com/_the_pratik_sp_/"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-9 h-9 rounded-lg bg-white/[0.04] hover:bg-[#A31C18]/15 border border-white/10 hover:border-[#A31C18]/40 flex items-center justify-center text-[#A3A3A3] hover:text-[#A31C18] transition-all duration-200 hover:scale-105"
@@ -166,7 +189,7 @@ export const Footer = ({ id }) => {
                 </a>
 
                 {/* Facebook */}
-                <a
+                {/* <a
                   href="https://facebook.com/"
                   target="_blank"
                   rel="noopener noreferrer"
@@ -177,11 +200,11 @@ export const Footer = ({ id }) => {
                   <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24" aria-hidden="true">
                     <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
                   </svg>
-                </a>
+                </a> */}
 
                 {/* LinkedIn */}
                 <a
-                  href="https://linkedin.com/"
+                  href="https://www.linkedin.com/in/pratikpatil25/"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-9 h-9 rounded-lg bg-white/[0.04] hover:bg-[#A31C18]/15 border border-white/10 hover:border-[#A31C18]/40 flex items-center justify-center text-[#A3A3A3] hover:text-[#A31C18] transition-all duration-200 hover:scale-105"

@@ -1,9 +1,21 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { ShieldCheck, Lock, EyeOff, UserCheck, FileText, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export const PrivacyPage = () => {
+  useEffect(() => {
+    try {
+      window.scrollTo({
+        top: 0,
+        left: 0,
+        behavior: 'smooth',
+      });
+    } catch {
+      window.scrollTo(0, 0);
+    }
+  }, []);
+
   return (
     <div className="max-w-4xl mx-auto space-y-8 select-none">
       {/* Header Banner */}

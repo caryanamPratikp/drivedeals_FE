@@ -57,7 +57,7 @@ export const Navbar = () => {
   };
 
   return (
-    <header className="sticky top-0 z-40 bg-[#090B0D]/90 backdrop-blur-xl border-b border-white/10 transition-colors">
+    <header id="navbar" className="sticky top-0 z-40 bg-[#090B0D]/90 backdrop-blur-xl border-b border-white/10 transition-colors">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-20 items-center">
           {/* 1. Brand Logo */}

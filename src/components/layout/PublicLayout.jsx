@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import { Navbar } from './Navbar';
 import { Footer } from './Footer';
@@ -11,6 +11,19 @@ export const PublicLayout = () => {
     location.pathname === '/register' ||
     location.pathname === '/signin' ||
     location.pathname === '/signup';
+
+  // Smoothly scroll to top (navbar screen) on public route navigation
+  useEffect(() => {
+    try {
+      window.scrollTo({
+        top: 0,
+        left: 0,
+        behavior: 'smooth',
+      });
+    } catch {
+      window.scrollTo(0, 0);
+    }
+  }, [location.pathname]);
 
   return (
     <div className="min-h-screen flex flex-col bg-[#090B0D] text-white selection:bg-[#ED1725] selection:text-white antialiased">
