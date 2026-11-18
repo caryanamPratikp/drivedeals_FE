@@ -6,3 +6,4 @@ export * from './quotations';
 export * from './consents';
 export * from './leads';
 export * from './notifications';
+export * from './admin';

@@ -1,0 +1,356 @@
+// DriveDeals Automotive Finance & Operations Master Telemetry Data
+
+export const mockFinanceData = {
+  // Overview Header & KPIs
+  overviewStats: [
+    {
+      id: 'gross-deal-volume',
+      title: 'Gross Deal Volume',
+      amount: 48250000, // ₹4.82 Cr
+      formattedAmount: '₹4,82,50,000',
+      compactAmount: '₹4.82 Cr',
+      changePercent: 18.4,
+      trend: 'up',
+      period: 'vs last month',
+      sparkline: [32, 38, 35, 42, 40, 48, 55, 52, 60, 68, 74, 82],
+      iconName: 'TrendingUp',
+      accentColor: '#ED1725',
+    },
+    {
+      id: 'collective-savings',
+      title: 'Collective Buyer Savings',
+      amount: 3865400, // ₹38.65 L
+      formattedAmount: '₹38,65,400',
+      compactAmount: '₹38.65 L',
+      changePercent: 24.2,
+      trend: 'up',
+      period: 'vs last month',
+      sparkline: [12, 15, 18, 22, 21, 26, 29, 31, 35, 38, 42, 47],
+      iconName: 'PiggyBank',
+      accentColor: '#22C55E',
+    },
+    {
+      id: 'active-escrow-buyers',
+      title: 'Active Buyers in Escrow',
+      amount: 148,
+      formattedAmount: '148 Buyers',
+      compactAmount: '148 Units',
+      changePercent: 12.5,
+      trend: 'up',
+      period: '12 new this week',
+      sparkline: [88, 92, 95, 102, 110, 115, 122, 128, 134, 140, 144, 148],
+      iconName: 'Users',
+      accentColor: '#38BDF8',
+    },
+    {
+      id: 'dealer-conversion',
+      title: 'Dealership Conversion Rate',
+      amount: 78.4,
+      formattedAmount: '78.4%',
+      compactAmount: '78.4%',
+      changePercent: 5.1,
+      trend: 'up',
+      period: '4.2 quotes/group avg',
+      sparkline: [62, 65, 68, 66, 70, 72, 71, 74, 75, 77, 76, 78],
+      iconName: 'CheckCircle2',
+      accentColor: '#F59E0B',
+    },
+  ],
+
+  // Section 4.C Account Details Card
+  accountDetails: {
+    accountHolder: 'DriveDeals Escrow Operations Pvt',
+    accountNumber: '•••• •••• •••• 9904',
+    accountType: 'Institutional Fleet Escrow Account',
+    status: 'Active & Verified',
+    clearingHouse: 'HDFC Treasury Node MH-12',
+    lastRecipient: {
+      name: 'Kothari Hyundai - Baner Outlets',
+      initials: 'KH',
+      category: 'OEM Authorized Dealer',
+      city: 'Pune, Maharashtra',
+      lastSettlementAmount: 1840000,
+      formattedAmount: '₹18,40,000',
+      date: 'Today, 11:42 AM',
+      reference: 'TXN-PUN-HYU-88219',
+      status: 'Settled',
+      units: '4x Hyundai Creta SX(O)',
+    },
+  },
+
+  // Section 4.D Currency / Deal Transfer Card
+  transferDetails: {
+    referenceNumber: 'DD-SETTLE-88219',
+    oemBenchmark: {
+      currency: 'INR',
+      amount: 1099900,
+      label: 'OEM Showroom Base Price (Single Unit)',
+    },
+    negotiatedCollective: {
+      currency: 'INR',
+      amount: 985000,
+      label: 'DriveDeals Collective Price (Group of 10+)',
+    },
+    concessionDelta: '₹1,14,900 Saved / Car (10.4%)',
+    timelineStatuses: [
+      { id: 'initiated', label: 'Initiated', timestamp: '09:30 AM', completed: true },
+      { id: 'verified', label: 'Verified', timestamp: '10:15 AM', completed: true },
+      { id: 'converting', label: 'Allocating', timestamp: '11:00 AM', completed: true, current: true },
+      { id: 'delivered', label: 'Delivered', timestamp: 'Est. 4:00 PM', completed: false },
+    ],
+  },
+
+  // Section 4.E Spending & Demand Map Clusters (Pune Core)
+  demandMapClusters: [
+    {
+      id: 'cluster-baner',
+      name: 'Baner Automotive Corridor',
+      zone: 'West Pune',
+      x: 32, // SVG coordinate %
+      y: 38,
+      buyers: 42,
+      grossDemand: '₹1.45 Cr',
+      topModel: 'Hyundai Creta & Kia Seltos',
+      avgConcession: '11.2%',
+      activityLevel: 'High',
+    },
+    {
+      id: 'cluster-wakad',
+      name: 'Wakad - Hinjawadi Tech Belt',
+      zone: 'North-West Pune',
+      x: 24,
+      y: 28,
+      buyers: 28,
+      grossDemand: '₹98.2 L',
+      topModel: 'Tata Curvv EV & Nexon',
+      avgConcession: '12.4%',
+      activityLevel: 'High',
+    },
+    {
+      id: 'cluster-pimpri',
+      name: 'Pimpri-Chinchwad Auto Cluster',
+      zone: 'North Pune',
+      x: 42,
+      y: 20,
+      buyers: 34,
+      grossDemand: '₹1.15 Cr',
+      topModel: 'Mahindra XUV700 & Scorpio-N',
+      avgConcession: '9.8%',
+      activityLevel: 'Medium',
+    },
+    {
+      id: 'cluster-kharadi',
+      name: 'Kharadi - Viman Nagar Hub',
+      zone: 'East Pune',
+      x: 75,
+      y: 44,
+      buyers: 38,
+      grossDemand: '₹1.22 Cr',
+      topModel: 'Tata Nexon & Grand Vitara',
+      avgConcession: '10.5%',
+      activityLevel: 'High',
+    },
+    {
+      id: 'cluster-hadapsar',
+      name: 'Hadapsar - Magarpatta City',
+      zone: 'South-East Pune',
+      x: 68,
+      y: 65,
+      buyers: 16,
+      grossDemand: '₹54.0 L',
+      topModel: 'Hyundai Venue & Creta',
+      avgConcession: '8.9%',
+      activityLevel: 'Medium',
+    },
+  ],
+
+  // Section 4.F Budget & Quota Statistics
+  budgetStats: {
+    monthlyQuotaTarget: 50000000, // ₹5.00 Cr
+    currentFulfilled: 41200000,   // ₹4.12 Cr
+    completionPercentage: 82.4,
+    previousMonthComparison: '+14.6% vs previous month',
+    remainingTarget: '₹88,00,000 remaining',
+    categories: [
+      { name: 'SUVs & Crossovers', percentage: 52, color: '#ED1725', amount: '₹2.14 Cr' },
+      { name: 'Executive Sedans', percentage: 22, color: '#38BDF8', amount: '₹90.6 L' },
+      { name: 'Pure Electric Vehicles', percentage: 16, color: '#22C55E', amount: '₹65.9 L' },
+      { name: 'Urban Hatchbacks', percentage: 10, color: '#F59E0B', amount: '₹41.2 L' },
+    ],
+  },
+
+  // Section 4.G Everyday Bank / Escrow Card
+  bankCard: {
+    cardName: 'DriveDeals Commercial Fleet Visa',
+    cardHolder: 'PRATIK SHIRISH PATIL',
+    maskedNumber: '•••• •••• •••• 8824',
+    expiry: '09/29',
+    cardType: 'Platinum Fleet Escrow',
+    status: 'ACTIVE',
+    dailyLimit: '₹2,50,00,000',
+    availableLimit: '₹1,94,40,000',
+    autoDebitEnabled: true,
+    settlementCycle: 'T+0 Instant RTGS',
+  },
+
+  // Section 5.A & 5.B Savings Overview & Progress
+  savingsOverview: {
+    totalSaved: 3865400,
+    annualMilestoneTarget: 5000000,
+    milestonePercent: 77.3,
+    activeGoalsCount: 4,
+    interestRebateEarned: 184200,
+    savedThisMonth: 642000,
+    categoriesProgress: [
+      { id: 'tata', name: 'Tata Collective', percent: 32, color: '#ED1725', saved: '₹12,36,928' },
+      { id: 'hyundai', name: 'Hyundai Bulk', percent: 28, color: '#38BDF8', saved: '₹10,82,312' },
+      { id: 'mahindra', name: 'Mahindra 4x4', percent: 24, color: '#F59E0B', saved: '₹9,27,696' },
+      { id: 'ev', name: 'EV Consortium', percent: 16, color: '#22C55E', saved: '₹6,18,464' },
+    ],
+  },
+
+  // Section 5.C Individual Savings Goal Cards
+  savingsGoals: [
+    {
+      id: 'goal-emergency-fleet',
+      name: 'Emergency Fleet Buffer',
+      iconName: 'Shield',
+      savedAmount: 1200000,
+      targetAmount: 1500000,
+      percent: 80,
+      timeRemaining: '24 days left',
+      monthlyContribution: '₹2,50,000/mo',
+      estimatedDate: 'Dec 15, 2026',
+      accentColor: '#22C55E',
+      category: 'Treasury Reserve',
+    },
+    {
+      id: 'goal-xuv700-alpha',
+      name: 'Mahindra XUV700 Group Alpha',
+      iconName: 'Car',
+      savedAmount: 840000,
+      targetAmount: 1000000,
+      percent: 84,
+      timeRemaining: '12 days left',
+      monthlyContribution: '₹1,80,000/mo',
+      estimatedDate: 'Nov 30, 2026',
+      accentColor: '#ED1725',
+      category: 'Bulk OEM Deal',
+    },
+    {
+      id: 'goal-curvv-ev',
+      name: 'Tata Curvv EV Collective',
+      iconName: 'Zap',
+      savedAmount: 550000,
+      targetAmount: 800000,
+      percent: 68.7,
+      timeRemaining: '38 days left',
+      monthlyContribution: '₹1,40,000/mo',
+      estimatedDate: 'Jan 10, 2027',
+      accentColor: '#38BDF8',
+      category: 'Green Mobility',
+    },
+    {
+      id: 'goal-creta-bulk',
+      name: 'Hyundai Creta Bulk Allocation',
+      iconName: 'Sparkles',
+      savedAmount: 1275400,
+      targetAmount: 1700000,
+      percent: 75,
+      timeRemaining: '18 days left',
+      monthlyContribution: '₹2,20,000/mo',
+      estimatedDate: 'Dec 05, 2026',
+      accentColor: '#F59E0B',
+      category: 'High Volume Demand',
+    },
+  ],
+
+  // Section 5.E Financial Projection Chart Points
+  projections: {
+    '3M': {
+      projectedAmount: '₹52,40,000',
+      currentSavings: '₹38,65,400',
+      estimatedInterest: '₹2,45,000',
+      monthlyContribution: '₹4,80,000',
+      labels: ['Nov', 'Dec', 'Jan', 'Feb'],
+      series: [
+        { month: 'Nov', actual: 38.65, projected: 38.65 },
+        { month: 'Dec', actual: null, projected: 43.1 },
+        { month: 'Jan', actual: null, projected: 47.8 },
+        { month: 'Feb', actual: null, projected: 52.4 },
+      ],
+    },
+    '6M': {
+      projectedAmount: '₹68,80,000',
+      currentSavings: '₹38,65,400',
+      estimatedInterest: '₹4,90,000',
+      monthlyContribution: '₹5,10,000',
+      labels: ['Nov', 'Jan', 'Mar', 'May'],
+      series: [
+        { month: 'Nov', actual: 38.65, projected: 38.65 },
+        { month: 'Dec', actual: null, projected: 43.1 },
+        { month: 'Jan', actual: null, projected: 48.2 },
+        { month: 'Feb', actual: null, projected: 53.6 },
+        { month: 'Mar', actual: null, projected: 59.0 },
+        { month: 'Apr', actual: null, projected: 63.8 },
+        { month: 'May', actual: null, projected: 68.8 },
+      ],
+    },
+    '1Y': {
+      projectedAmount: '₹98,50,000',
+      currentSavings: '₹38,65,400',
+      estimatedInterest: '₹9,80,000',
+      monthlyContribution: '₹5,40,000',
+      labels: ['Q4 26', 'Q1 27', 'Q2 27', 'Q3 27', 'Q4 27'],
+      series: [
+        { month: 'Q4 26', actual: 38.65, projected: 38.65 },
+        { month: 'Q1 27', actual: null, projected: 52.4 },
+        { month: 'Q2 27', actual: null, projected: 68.8 },
+        { month: 'Q3 27', actual: null, projected: 84.2 },
+        { month: 'Q4 27', actual: null, projected: 98.5 },
+      ],
+    },
+  },
+
+  // Section 5.F Round-Ups Savings
+  roundUps: {
+    enabled: true,
+    multiplier: 'Next ₹100',
+    totalAccumulated: 142850,
+    formattedAccumulated: '₹1,42,850',
+    transactionsCount: 38,
+    recentTransactions: [
+      { id: 'ru-1', title: 'Tata Nexon Booking Token', rawAmount: 9900, rounded: 10000, saved: 100, time: '2h ago' },
+      { id: 'ru-2', title: 'Hyundai Creta Verification Fee', rawAmount: 1850, rounded: 1900, saved: 50, time: '5h ago' },
+      { id: 'ru-3', title: 'Mahindra Escrow Deposit', rawAmount: 49800, rounded: 50000, saved: 200, time: '1d ago' },
+    ],
+  },
+
+  // Notifications
+  notifications: [
+    {
+      id: 'notif-1',
+      type: 'dealer',
+      title: 'New Dealership Application',
+      message: 'Silver Star Mercedes Pune submitted authorization docs for review.',
+      time: '12m ago',
+      read: false,
+    },
+    {
+      id: 'notif-2',
+      type: 'deal',
+      title: 'Creta SX(O) Group Milestone',
+      message: 'Demand group reached 12 verified buyers. Ready for RFQ broadcast.',
+      time: '45m ago',
+      read: false,
+    },
+    {
+      id: 'notif-3',
+      type: 'escrow',
+      title: 'Settlement Disbursed',
+      message: '₹18,40,000 successfully settled to Kothari Hyundai Treasury.',
+      time: '2h ago',
+      read: true,
+    },
+  ],
+};
