@@ -158,9 +158,11 @@ export const AdminDashboard = () => {
       amount: realSavings,
       formattedAmount: savingsFormatted,
       changePercent: realSavings > 0 ? 24.2 : 0,
-      trend: 'up',
-      period: '6.8% collective negotiation',
-      sparkline: adminAnalytics?.timeline?.map((t) => Number(t.savings) / 100000) || [realSavings * 0.2, realSavings * 0.4, realSavings * 0.7, realSavings],
+      trend: realSavings > 0 ? 'up' : 'neutral',
+      period: realSavings > 0
+        ? `${adminAnalytics?.avgDiscountPercentage ? `${adminAnalytics.avgDiscountPercentage}%` : ''} live quote concession`
+        : '0 active concessions',
+      sparkline: adminAnalytics?.timeline?.map((t) => Number(t.savings) / 100000) || [0, 0, 0, 0],
       iconName: 'PiggyBank',
       accentColor: '#22C55E',
       isCurrency: true,
@@ -198,8 +200,11 @@ export const AdminDashboard = () => {
   const benchmarkPrice = firstActiveGroup?.variant?.exShowroomPrice
     ? Number(firstActiveGroup.variant.exShowroomPrice)
     : (cars && cars[0]?.illustrativeStartingPrice) || 0;
-  const collectivePrice = benchmarkPrice > 0 ? Math.round(benchmarkPrice * 0.932) : 0;
-  const savingsDelta = benchmarkPrice - collectivePrice;
+  const groupQuotes = (quotations || []).filter((q) => q && q.groupId === firstActiveGroup?.id);
+  const bestQuote = groupQuotes[0];
+  const discountAmount = bestQuote ? Number(bestQuote.discountAmount || bestQuote.groupDiscount || 0) : 0;
+  const collectivePrice = benchmarkPrice > 0 ? (benchmarkPrice - discountAmount) : 0;
+  const savingsDelta = discountAmount;
 
   const dynamicTransferDetails = {
     referenceNumber: firstActiveGroup ? `GRP-${(firstActiveGroup.id || '1').substring(0, 8).toUpperCase()}` : 'NO-ACTIVE-COLLECTIVE',
@@ -213,7 +218,7 @@ export const AdminDashboard = () => {
       amount: collectivePrice,
       label: firstActiveGroup ? `${firstActiveGroup.carModel || 'Vehicle'} Group Price (${firstActiveGroup.currentMembers || 1}+ Buyers)` : 'Awaiting Groups in DB',
     },
-    concessionDelta: savingsDelta > 0 ? `₹${savingsDelta.toLocaleString('en-IN')} Saved / Car (6.8%)` : '₹0 Concession (0%)',
+    concessionDelta: savingsDelta > 0 ? `₹${savingsDelta.toLocaleString('en-IN')} Saved / Car` : '₹0 Concession (0%)',
     timelineStatuses: [
       { id: 'initiated', label: 'Formation', timestamp: 'Stage 1', completed: firstActiveGroup !== null },
       { id: 'verified', label: 'RFQs Open', timestamp: 'Stage 2', completed: firstActiveGroup ? firstActiveGroup.stage !== 'FORMATION' : false },
@@ -234,7 +239,7 @@ export const AdminDashboard = () => {
         buyers: h.buyers || 0,
         grossDemand: Number(h.volume) >= 10000000 ? `₹${(Number(h.volume) / 10000000).toFixed(2)} Cr` : `₹${(Number(h.volume) / 100000).toFixed(1)} L`,
         topModel: groups[i]?.carModel || (cars && cars[i]?.modelName) || 'Active Demand',
-        avgConcession: '6.8%',
+        avgConcession: adminAnalytics?.avgDiscountPercentage ? `${adminAnalytics.avgDiscountPercentage}%` : '0%',
         activityLevel: h.buyers > 5 ? 'High' : 'Normal',
       }))
     : [];
