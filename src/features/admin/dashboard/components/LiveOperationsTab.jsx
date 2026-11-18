@@ -13,9 +13,13 @@ import {
   RefreshCw,
   Search,
   ExternalLink,
+  Radio,
+  Tag,
+  Eye,
 } from 'lucide-react';
 import { formatDate } from '../../../../lib/dates';
 import { StatusBadge } from '../../../../components/common/StatusBadge';
+import { GroupActivityModal } from './modals/GroupActivityModal';
 import { staggerContainer, staggerItem } from '../../../../lib/animations';
 
 export const LiveOperationsTab = ({
@@ -30,6 +34,7 @@ export const LiveOperationsTab = ({
 }) => {
   const [filterQuery, setFilterQuery] = useState('');
   const [activeSubTab, setActiveSubTab] = useState('dealers'); // 'dealers' | 'groups' | 'leads' | 'audit'
+  const [selectedGroupForActivity, setSelectedGroupForActivity] = useState(null);
 
   const pendingDealers = dealers.filter(
     (d) => d.verificationStatus === 'PENDING' || d.status === 'PENDING' || !d.verificationStatus
@@ -212,47 +217,83 @@ export const LiveOperationsTab = ({
       {activeSubTab === 'groups' && (
         <motion.div variants={staggerItem} className="space-y-4">
           <div className="flex items-center justify-between">
-            <h3 className="text-base font-heading font-bold text-white">
-              Active Buyer Demand Groups
-            </h3>
-            <span className="text-xs text-[#A1A1AA]">{groups.length} Groups</span>
+            <div>
+              <h3 className="text-base font-heading font-bold text-white">
+                Active Buyer Demand Groups
+              </h3>
+              <p className="text-xs text-[#A1A1AA] mt-0.5">
+                Track real-time buyer purchase signals, dealer quotations, and cohort progression.
+              </p>
+            </div>
+            <span className="text-xs text-[#A1A1AA] font-mono">{groups.length} Groups</span>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {groups.map((group) => (
-              <div
-                key={group.id}
-                className="p-5 rounded-2xl bg-[#17191D] border border-white/5 space-y-3"
-              >
-                <div className="flex items-center justify-between">
-                  <span className="text-xs font-mono font-bold text-[#ED1725] bg-[#ED1725]/10 px-2 py-0.5 rounded">
-                    {group.city || 'Pune'}
-                  </span>
-                  <span className="text-[10px] font-mono text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded">
-                    {group.status || 'ACTIVE'}
-                  </span>
-                </div>
+            {groups.map((group) => {
+              const signalsCount = group.buyerSignals?.length || 0;
+              const quotesCount = group.dealerQuotes?.length || group.quotesCount || 0;
+              const buyersCount = group.currentMembers ?? group.currentSize ?? group.memberCount ?? group.members?.length ?? 0;
+              const targetSize = group.targetMembers || group.targetSize || 5;
+              const carTitle = group.carModel || group.car?.modelName || group.car?.model || group.targetModel || 'Vehicle Demand Group';
 
-                <div className="font-heading font-bold text-white text-base">
-                  {group.carModel || group.targetModel || 'Hyundai Creta'}
-                </div>
+              return (
+                <div
+                  key={group.id}
+                  className="p-5 rounded-2xl bg-[#17191D] border border-white/5 space-y-3.5 hover:border-white/15 transition-all group"
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-mono font-bold text-[#ED1725] bg-[#ED1725]/10 px-2 py-0.5 rounded">
+                      {group.city || 'Pune'}
+                    </span>
+                    <span className="text-[10px] font-mono text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded font-bold">
+                      {group.stage || group.status || 'ACTIVE'}
+                    </span>
+                  </div>
 
-                <div className="grid grid-cols-2 gap-2 bg-black/30 p-2.5 rounded-xl text-xs">
                   <div>
-                    <div className="text-[10px] text-[#A1A1AA]">Current Buyers</div>
-                    <div className="font-heading font-bold text-white">
-                      {group.currentSize || group.memberCount || 6} / {group.targetSize || 10}
+                    <div className="font-heading font-bold text-white text-base">
+                      {carTitle}
+                    </div>
+                    {group.variant?.name && (
+                      <div className="text-xs text-[#A1A1AA] truncate mt-0.5">
+                        {group.variant.name}
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="grid grid-cols-3 gap-2 bg-black/40 p-2.5 rounded-xl text-center">
+                    <div>
+                      <div className="text-[10px] text-[#A1A1AA]">Buyers</div>
+                      <div className="font-heading font-bold text-white text-xs mt-0.5">
+                        {buyersCount}/{targetSize}
+                      </div>
+                    </div>
+                    <div>
+                      <div className="text-[10px] text-[#A1A1AA]">Signals</div>
+                      <div className="font-heading font-bold text-[#ED1725] text-xs mt-0.5 flex items-center justify-center gap-1">
+                        <Radio size={11} />
+                        <span>{signalsCount}</span>
+                      </div>
+                    </div>
+                    <div>
+                      <div className="text-[10px] text-[#A1A1AA]">Quotes</div>
+                      <div className="font-heading font-bold text-emerald-400 text-xs mt-0.5 flex items-center justify-center gap-1">
+                        <Tag size={11} />
+                        <span>{quotesCount}</span>
+                      </div>
                     </div>
                   </div>
-                  <div>
-                    <div className="text-[10px] text-[#A1A1AA]">Active Quotes</div>
-                    <div className="font-heading font-bold text-emerald-400">
-                      {group.quotesCount || 3} Offers
-                    </div>
-                  </div>
+
+                  <button
+                    onClick={() => setSelectedGroupForActivity(group)}
+                    className="w-full py-2 px-3 rounded-xl bg-white/5 hover:bg-white/10 text-white text-xs font-heading font-bold flex items-center justify-center gap-2 border border-white/10 hover:border-[#ED1725]/40 transition-all cursor-pointer"
+                  >
+                    <Eye size={13} className="text-[#ED1725]" />
+                    <span>Track Activity & Quotes</span>
+                  </button>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </motion.div>
       )}
@@ -338,6 +379,13 @@ export const LiveOperationsTab = ({
           </div>
         </motion.div>
       )}
+
+      {/* Activity, Signals & Quotations Inspection Modal */}
+      <GroupActivityModal
+        isOpen={!!selectedGroupForActivity}
+        group={selectedGroupForActivity}
+        onClose={() => setSelectedGroupForActivity(null)}
+      />
     </motion.div>
   );
 };

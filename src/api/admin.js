@@ -23,6 +23,10 @@ export async function fetchAdminGroups() {
   return apiClient('/admin/groups');
 }
 
+export async function fetchAdminGroupDetails(groupId) {
+  return apiClient(`/admin/groups/${groupId}`);
+}
+
 export async function fetchAdminLeads() {
   return apiClient('/admin/leads');
 }
