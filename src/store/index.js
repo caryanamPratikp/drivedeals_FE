@@ -60,7 +60,7 @@ function normalizeVariant(v, carId) {
 }
 
 function normalizeGroup(g) {
-  if (!g) return null;
+  if (!g || typeof g !== 'object') return null;
   const stageToStatus = {
     FORMATION: 'COLLECTING_INTEREST',
     OPEN_FOR_QUOTES: 'REQUESTING_QUOTES',
@@ -78,13 +78,14 @@ function normalizeGroup(g) {
     : null;
 
   const variant = g.variant ? normalizeVariant(g.variant, car?.id || g.carId) : null;
-  const memberCount = g.currentMembers !== undefined ? g.currentMembers : (Array.isArray(g.memberIds) ? g.memberIds.length : 1);
+  const memberCount = g.currentMembers !== undefined ? Number(g.currentMembers) : (Array.isArray(g.memberIds) ? g.memberIds.length : 1);
   const memberIds = Array.isArray(g.memberIds)
     ? g.memberIds
-    : Array(memberCount).fill('buyer');
+    : Array(Math.max(1, memberCount)).fill('buyer');
 
   return {
     ...g,
+    id: g.id ? String(g.id) : '',
     status: stageToStatus[g.stage] || g.status || 'COLLECTING_INTEREST',
     car,
     variant,
@@ -317,13 +318,15 @@ export const useAppStore = create((set, get) => ({
       set({ groupsLoading: true, groupsError: null });
       const res = await groupsApi.getGroups(filters);
       const groupList = res?.content || (Array.isArray(res) ? res : []);
-      const normalized = groupList.map(normalizeGroup);
+      const normalized = groupList.map(normalizeGroup).filter(Boolean);
       set((state) => {
         // Retain any locally created groups so client navigation never drops active groups
-        const backendIds = new Set(normalized.map((g) => g.id));
-        const localGroups = (state.groups || []).filter(
-          (g) => !backendIds.has(g.id) && (g.id?.startsWith('grp-') || g.isCurrentUserMember)
-        );
+        const backendIds = new Set(normalized.map((g) => g?.id).filter(Boolean));
+        const localGroups = (state.groups || [])
+          .filter(Boolean)
+          .filter(
+            (g) => g?.id && !backendIds.has(g.id) && (g.id?.startsWith('grp-') || g.isCurrentUserMember)
+          );
         return {
           groups: [...normalized, ...localGroups],
           groupsLoading: false,
@@ -345,17 +348,24 @@ export const useAppStore = create((set, get) => ({
     try {
       const rawGroup = await groupsApi.getGroupById(groupId);
       const normalized = normalizeGroup(rawGroup);
+      if (!normalized) {
+        return (get().groups || []).filter(Boolean).find((g) => g?.id === groupId) || null;
+      }
 
-      set((state) => ({
-        groups: state.groups.some((g) => g.id === normalized.id)
-          ? state.groups.map((g) => (g.id === normalized.id ? normalized : g))
-          : [normalized, ...state.groups],
-      }));
+      set((state) => {
+        const currentGroups = (state.groups || []).filter(Boolean);
+        const exists = currentGroups.some((g) => g?.id === normalized.id);
+        return {
+          groups: exists
+            ? currentGroups.map((g) => (g?.id === normalized.id ? normalized : g))
+            : [normalized, ...currentGroups],
+        };
+      });
       return normalized;
     } catch (err) {
       console.error(`Failed to fetch group ${groupId} from DB:`, err);
       // Fallback: check if group exists in local Zustand store
-      const local = get().groups.find((g) => g.id === groupId);
+      const local = (get().groups || []).filter(Boolean).find((g) => g?.id === groupId);
       if (local) {
         return local;
       }

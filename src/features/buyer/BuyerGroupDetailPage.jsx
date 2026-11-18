@@ -70,9 +70,9 @@ export const BuyerGroupDetailPage = () => {
     currentUser?.role &&
     currentUser?.role !== 'PUBLIC'
   );
-  const group = groups.find((g) => g.id === groupId);
-  const variant = group?.variant || variants.find((v) => v.id === group?.variantId) || { name: 'Standard Trim', keyFeatures: [] };
-  const car = group?.car || cars.find((c) => c.id === variant?.carId || c.id === group?.carId) || { brand: 'Vehicle', modelName: 'Model', model: 'Model' };
+  const group = (groups || []).filter(Boolean).find((g) => g?.id === groupId);
+  const variant = group?.variant || (variants || []).filter(Boolean).find((v) => v?.id === group?.variantId) || { name: 'Standard Trim', keyFeatures: [] };
+  const car = group?.car || (cars || []).filter(Boolean).find((c) => c?.id === variant?.carId || c?.id === group?.carId) || { brand: 'Vehicle', modelName: 'Model', model: 'Model' };
 
   // Safely parse key features
   const keyFeaturesList = Array.isArray(variant?.keyFeatures)
@@ -81,11 +81,11 @@ export const BuyerGroupDetailPage = () => {
         ? (() => { try { const p = JSON.parse(variant.keyFeatures); return Array.isArray(p) ? p : [variant.keyFeatures]; } catch(e) { return [variant.keyFeatures]; } })()
         : []);
 
-  const myMembership = memberships.find((m) => m.groupId === groupId && (m.buyerId === currentUser?.id || m.buyerId === 'u-buyer-me') && m.status === 'ACTIVE');
-  const isMember = group?.isCurrentUserMember || Boolean(myMembership) || (Array.isArray(group?.memberIds) && (group.memberIds.includes(currentUser?.id) || group.memberIds.includes('u-buyer-me')));
+  const myMembership = (memberships || []).filter(Boolean).find((m) => m?.groupId === groupId && (m.buyerId === currentUser?.id || m.buyerId === 'u-buyer-me') && m.status === 'ACTIVE');
+  const isMember = Boolean(group?.isCurrentUserMember) || Boolean(myMembership) || (Array.isArray(group?.memberIds) && (group.memberIds.includes(currentUser?.id) || group.memberIds.includes('u-buyer-me')));
 
   // Existing signal for this buyer
-  const mySignal = buyerSignals.find((s) => s.groupId === groupId && s.buyerId === currentUser?.id);
+  const mySignal = (buyerSignals || []).filter(Boolean).find((s) => s?.groupId === groupId && s.buyerId === currentUser?.id);
 
   // Signal form state
   const [targetPrice, setTargetPrice] = useState(mySignal?.targetPrice ? mySignal.targetPrice.toString() : '');
@@ -132,11 +132,11 @@ export const BuyerGroupDetailPage = () => {
   }
 
   // Quotations for this group
-  const groupQuotes = quotations.filter((q) => q.groupId === group.id);
-  const publishedOffers = quotationVersions.filter((qv) => groupQuotes.some((q) => q.id === qv.quotationId) && qv.status === 'PUBLISHED');
+  const groupQuotes = (quotations || []).filter(Boolean).filter((q) => q?.groupId === group.id);
+  const publishedOffers = (quotationVersions || []).filter(Boolean).filter((qv) => groupQuotes.some((q) => q?.id === qv?.quotationId) && qv?.status === 'PUBLISHED');
 
   // Group Signals
-  const groupSignals = buyerSignals.filter((s) => s.groupId === group.id);
+  const groupSignals = (buyerSignals || []).filter(Boolean).filter((s) => s?.groupId === group.id);
   const totalSignalsCount = groupSignals.length;
   const memberCount =
     group?.currentMembers ||
@@ -196,7 +196,7 @@ export const BuyerGroupDetailPage = () => {
     }
   };
 
-  const myActivity = auditEvents.filter((a) => a.entityId === group.id);
+  const myActivity = (auditEvents || []).filter(Boolean).filter((a) => a?.entityId === group?.id);
 
   return (
     <div className="space-y-8 select-none">
@@ -208,7 +208,9 @@ export const BuyerGroupDetailPage = () => {
           <div className="space-y-3">
             <div className="flex flex-wrap items-center gap-2">
               <StatusBadge status={group.stage || group.status} showInfo={false} />
-              <span className="text-xs text-[#71717A] font-mono">Group Ref: #{group.id.slice(-6)}</span>
+              <span className="text-xs text-[#71717A] font-mono">
+                Group Ref: #{group?.id ? String(group.id).slice(-6) : 'DEMAND'}
+              </span>
               {isMember && (
                 <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 font-semibold">
                   <CheckCircle2 size={12} className="text-[#22C55E]" />

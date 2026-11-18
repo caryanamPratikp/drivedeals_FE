@@ -17,11 +17,9 @@ import {
 import { useAppStore } from '../../store';
 import { mockFinanceData } from './dashboard/data/mockFinanceData';
 import { FinanceStatCard } from './dashboard/components/FinanceStatCard';
-import { AccountDetailsCard } from './dashboard/components/AccountDetailsCard';
 import { TransferInfoCard } from './dashboard/components/TransferInfoCard';
 import { SpendingMapCard } from './dashboard/components/SpendingMapCard';
 import { BudgetStatsCard } from './dashboard/components/BudgetStatsCard';
-import { EverydayBankCard } from './dashboard/components/EverydayBankCard';
 import { SavingsScreen } from './dashboard/components/SavingsScreen';
 import { LiveOperationsTab } from './dashboard/components/LiveOperationsTab';
 
@@ -30,7 +28,6 @@ import { SearchModal } from './dashboard/components/modals/SearchModal';
 import { NotificationPopover } from './dashboard/components/modals/NotificationPopover';
 import { SendMoneyModal } from './dashboard/components/modals/SendMoneyModal';
 import { AddGoalModal } from './dashboard/components/modals/AddGoalModal';
-import { RecipientModal } from './dashboard/components/modals/RecipientModal';
 
 import { staggerContainer, staggerItem, luxuryEase } from '../../lib/animations';
 
@@ -61,7 +58,6 @@ export const AdminDashboard = () => {
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
   const [isSendMoneyOpen, setIsSendMoneyOpen] = useState(false);
   const [isAddGoalOpen, setIsAddGoalOpen] = useState(false);
-  const [selectedRecipient, setSelectedRecipient] = useState(null);
 
   // Dynamic Notifications State from DB
   const [notificationsList, setNotificationsList] = useState([]);
@@ -188,37 +184,8 @@ export const AdminDashboard = () => {
     },
   ];
 
-  // 3. Dynamic Account & Recipient Details from DB dealers
-  const verifiedOrFirstDealer = dealers.find((d) => d.verificationStatus === 'VERIFIED' || d.status === 'VERIFIED') || dealers[0] || null;
-  const dynamicAccountDetails = {
-    accountHolder: 'DriveDeals Group Buying Platform',
-    accountNumber: '•••• •••• •••• 9904',
-    accountType: 'Group Buying Operations Account',
-    status: 'Active & Verified',
-    clearingHouse: 'HDFC Treasury Node MH-12',
-    lastRecipient: verifiedOrFirstDealer
-      ? {
-          name: verifiedOrFirstDealer.dealershipName || verifiedOrFirstDealer.name || 'Authorized Dealership',
-          initials: (verifiedOrFirstDealer.dealershipName || verifiedOrFirstDealer.name || 'DD')
-            .split(' ')
-            .map((w) => w[0])
-            .join('')
-            .substring(0, 2)
-            .toUpperCase(),
-          category: verifiedOrFirstDealer.brand ? `${verifiedOrFirstDealer.brand} Franchise` : 'OEM Dealership',
-          city: verifiedOrFirstDealer.city || 'Pune, Maharashtra',
-          lastSettlementAmount: 1840000,
-          formattedAmount: '₹18,40,000',
-          date: verifiedOrFirstDealer.verifiedAt ? new Date(verifiedOrFirstDealer.verifiedAt).toLocaleDateString() : 'Active Partner',
-          reference: `TXN-${(verifiedOrFirstDealer.id || 'LIVE').substring(0, 8)}`,
-          status: verifiedOrFirstDealer.verificationStatus || verifiedOrFirstDealer.status || 'VERIFIED',
-          units: `${verifiedOrFirstDealer.brand || 'Franchise'} Allocation`,
-        }
-      : null,
-  };
-
-  // 4. Dynamic Transfer Details from DB groups
-  const firstActiveGroup = groups[0] || null;
+  // 3. Dynamic Transfer Details from DB groups
+  const firstActiveGroup = (groups || []).filter(Boolean)[0] || null;
   const benchmarkPrice = firstActiveGroup?.variant?.exShowroomPrice
     ? Number(firstActiveGroup.variant.exShowroomPrice)
     : (cars && cars[0]?.illustrativeStartingPrice) || 1099900;
@@ -499,54 +466,46 @@ export const AdminDashboard = () => {
             exit={{ opacity: 0, y: -10 }}
             className="space-y-6"
           >
-            {/* Row 1: Account Details (4.C) & Transfer Info (4.D) */}
+            {/* Row 1: Vehicle Collective Settlement & Negotiation (4.D) + Operations Hub */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <AccountDetailsCard
-                accountDetails={dynamicAccountDetails}
-                hideAmounts={hideAmounts}
-                onOpenRecipientModal={(recipient) => setSelectedRecipient(recipient)}
-                onOpenQuickTransfer={() => setIsSendMoneyOpen(true)}
-              />
               <TransferInfoCard
                 transferDetails={dynamicTransferDetails}
                 hideAmounts={hideAmounts}
                 onInitiateTransfer={() => setIsSendMoneyOpen(true)}
               />
-            </div>
 
-            {/* Row 2: Spending Map (4.E) & Budget Stats (4.F) */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <SpendingMapCard
-                clusters={dynamicMapClusters}
-                hideAmounts={hideAmounts}
-              />
-              <BudgetStatsCard
-                budgetStats={dynamicBudgetStats}
-                hideAmounts={hideAmounts}
-              />
-            </div>
-
-            {/* Row 3: Everyday Bank Card (4.G) */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <EverydayBankCard
-                bankCard={mockFinanceData.bankCard}
-                hideAmounts={hideAmounts}
-              />
-
-              {/* Quick Navigation Panel */}
-              <div className="rounded-2xl bg-gradient-to-b from-[#17191D] to-[#111315] p-5 sm:p-6 border border-white/5 flex flex-col justify-between">
+              {/* Direct Operational Links Panel */}
+              <div className="rounded-[28px] sm:rounded-3xl bg-gradient-to-b from-[#17191D] to-[#111315] p-5 sm:p-6 border border-white/10 shadow-xl flex flex-col justify-between transition-all duration-300 hover:border-white/20">
                 <div>
-                  <h3 className="text-sm font-heading font-bold text-white tracking-wide mb-1">
-                    Direct Operational Links
-                  </h3>
-                  <p className="text-[11px] text-[#A1A1AA] mb-4">
-                    Fast access to dealership moderation, volume groups, and audit trails
-                  </p>
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white shrink-0">
+                      <Layers className="w-5 h-5 text-[#ED1725]" />
+                    </div>
+                    <div>
+                      <h3 className="text-sm font-heading font-bold text-white tracking-wide">
+                        Direct Operational Links
+                      </h3>
+                      <p className="text-[11px] text-[#A1A1AA]">
+                        Fast access to users, dealerships, demand groups, and audit trails
+                      </p>
+                    </div>
+                  </div>
 
-                  <div className="space-y-2">
+                  <div className="space-y-2.5">
+                    <a
+                      href="/admin/users"
+                      className="p-3.5 rounded-2xl bg-white/[0.02] hover:bg-white/5 border border-white/5 flex items-center justify-between text-xs transition-colors group"
+                    >
+                      <span className="text-white font-medium group-hover:text-[#ED1725] transition-colors">
+                        Platform Users & Buyer Groups Directory
+                      </span>
+                      <span className="text-[11px] font-mono text-[#A1A1AA]">
+                        {users.length} accounts
+                      </span>
+                    </a>
                     <a
                       href="/admin/dealers"
-                      className="p-3 rounded-xl bg-white/[0.02] hover:bg-white/5 border border-white/5 flex items-center justify-between text-xs transition-colors group"
+                      className="p-3.5 rounded-2xl bg-white/[0.02] hover:bg-white/5 border border-white/5 flex items-center justify-between text-xs transition-colors group"
                     >
                       <span className="text-white font-medium group-hover:text-[#ED1725] transition-colors">
                         Review Dealership Franchise Licenses
@@ -557,10 +516,10 @@ export const AdminDashboard = () => {
                     </a>
                     <a
                       href="/admin/groups"
-                      className="p-3 rounded-xl bg-white/[0.02] hover:bg-white/5 border border-white/5 flex items-center justify-between text-xs transition-colors group"
+                      className="p-3.5 rounded-2xl bg-white/[0.02] hover:bg-white/5 border border-white/5 flex items-center justify-between text-xs transition-colors group"
                     >
                       <span className="text-white font-medium group-hover:text-[#ED1725] transition-colors">
-                        Inspect Active Demand Groups
+                        Inspect Active Demand Groups & Cohorts
                       </span>
                       <span className="text-[11px] font-mono text-[#A1A1AA]">
                         {groups.length} groups
@@ -568,7 +527,7 @@ export const AdminDashboard = () => {
                     </a>
                     <a
                       href="/admin/audit"
-                      className="p-3 rounded-xl bg-white/[0.02] hover:bg-white/5 border border-white/5 flex items-center justify-between text-xs transition-colors group"
+                      className="p-3.5 rounded-2xl bg-white/[0.02] hover:bg-white/5 border border-white/5 flex items-center justify-between text-xs transition-colors group"
                     >
                       <span className="text-white font-medium group-hover:text-[#ED1725] transition-colors">
                         Immutable Cryptographic Audit Trail
@@ -585,6 +544,18 @@ export const AdminDashboard = () => {
                   <span className="font-mono text-slate-400">Node: Pune Central</span>
                 </div>
               </div>
+            </div>
+
+            {/* Row 2: Spending Map (4.E) & Budget Stats (4.F) */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <SpendingMapCard
+                clusters={dynamicMapClusters}
+                hideAmounts={hideAmounts}
+              />
+              <BudgetStatsCard
+                budgetStats={dynamicBudgetStats}
+                hideAmounts={hideAmounts}
+              />
             </div>
           </motion.div>
         )}
@@ -650,19 +621,12 @@ export const AdminDashboard = () => {
       <SendMoneyModal
         isOpen={isSendMoneyOpen}
         onClose={() => setIsSendMoneyOpen(false)}
-        defaultRecipient={selectedRecipient}
       />
 
       <AddGoalModal
         isOpen={isAddGoalOpen}
         onClose={() => setIsAddGoalOpen(false)}
         onGoalCreated={handleGoalCreated}
-      />
-
-      <RecipientModal
-        isOpen={!!selectedRecipient}
-        recipient={selectedRecipient}
-        onClose={() => setSelectedRecipient(null)}
       />
     </motion.div>
   );
