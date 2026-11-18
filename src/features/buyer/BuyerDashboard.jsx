@@ -268,7 +268,7 @@ export const BuyerDashboard = () => {
                             <span>•</span>
                             <span className="text-white font-bold">{groupOffers.length} Showroom Offers</span>
                             <span>•</span>
-                            <span>Goal: {group.targetMembers || 5} cars</span>
+                            <span>Goal: {group.targetMembers || 15} cars</span>
                           </div>
                         </div>
                       </div>

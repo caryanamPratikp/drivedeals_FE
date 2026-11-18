@@ -15,15 +15,15 @@ export const SpendingMapCard = ({ clusters = [], hideAmounts = false }) => {
 
   return (
     <motion.div
-      whileHover={{ y: -3, borderColor: 'rgba(255, 255, 255, 0.14)' }}
-      className="relative rounded-2xl bg-gradient-to-b from-[#17191D] to-[#111315] p-5 sm:p-6 border border-white/5 transition-all duration-300 flex flex-col justify-between overflow-hidden"
+      whileHover={{ y: -3, borderColor: 'rgba(255, 255, 255, 0.16)' }}
+      className="relative rounded-[28px] sm:rounded-3xl bg-gradient-to-b from-[#17191D] to-[#111315] p-5 sm:p-6 border border-white/10 shadow-xl transition-all duration-300 flex flex-col justify-between overflow-hidden"
     >
       <div>
         {/* Header */}
         <div className="flex items-center justify-between gap-3 mb-4">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-white">
-              <Compass className="w-4 h-4 text-[#ED1725]" />
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white shrink-0">
+              <Compass className="w-5 h-5 text-[#ED1725]" />
             </div>
             <div>
               <h3 className="text-sm font-heading font-bold text-white tracking-wide">
@@ -36,17 +36,17 @@ export const SpendingMapCard = ({ clusters = [], hideAmounts = false }) => {
           </div>
 
           {/* Interactive Zoom Controls */}
-          <div className="flex items-center gap-1 bg-black/40 p-1 rounded-xl border border-white/5">
+          <div className="flex items-center gap-1 bg-black/40 p-1 rounded-full border border-white/5">
             <button
               onClick={handleZoomIn}
-              className="w-7 h-7 rounded-lg bg-white/5 hover:bg-white/10 text-white flex items-center justify-center transition-colors text-xs"
+              className="w-7 h-7 rounded-full bg-white/5 hover:bg-white/10 text-white flex items-center justify-center transition-colors text-xs"
               title="Zoom In"
             >
               <Plus className="w-3.5 h-3.5" />
             </button>
             <button
               onClick={handleZoomOut}
-              className="w-7 h-7 rounded-lg bg-white/5 hover:bg-white/10 text-white flex items-center justify-center transition-colors text-xs"
+              className="w-7 h-7 rounded-full bg-white/5 hover:bg-white/10 text-white flex items-center justify-center transition-colors text-xs"
               title="Zoom Out"
             >
               <Minus className="w-3.5 h-3.5" />

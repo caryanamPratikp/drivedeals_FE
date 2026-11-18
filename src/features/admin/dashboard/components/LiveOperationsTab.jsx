@@ -233,7 +233,7 @@ export const LiveOperationsTab = ({
               const signalsCount = group.buyerSignals?.length || 0;
               const quotesCount = group.dealerQuotes?.length || group.quotesCount || 0;
               const buyersCount = group.currentMembers ?? group.currentSize ?? group.memberCount ?? group.members?.length ?? 0;
-              const targetSize = group.targetMembers || group.targetSize || 5;
+              const targetSize = group.targetMembers || group.targetSize || 15;
               const carTitle = group.carModel || group.car?.modelName || group.car?.model || group.targetModel || 'Vehicle Demand Group';
 
               return (

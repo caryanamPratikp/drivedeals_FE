@@ -96,7 +96,7 @@ export const FinanceStatCard = ({
       }}
       whileTap={onClick ? { scale: 0.985 } : undefined}
       onClick={onClick}
-      className={`group relative rounded-2xl bg-gradient-to-b from-[#17191D] to-[#111315] p-5 sm:p-6 border border-white/5 transition-all duration-300 ${
+      className={`group relative rounded-[28px] sm:rounded-3xl bg-gradient-to-b from-[#17191D] to-[#111315] p-5 sm:p-6 border border-white/10 shadow-xl transition-all duration-300 ${
         onClick ? 'cursor-pointer' : ''
       }`}
     >
@@ -112,7 +112,7 @@ export const FinanceStatCard = ({
           {title}
         </span>
         <div
-          className="w-9 h-9 rounded-xl flex items-center justify-center border border-white/5 bg-white/[0.03] transition-colors group-hover:border-white/10"
+          className="w-10 h-10 rounded-full flex items-center justify-center border border-white/10 bg-white/[0.04] shadow-inner transition-colors group-hover:border-white/20"
           style={{ color: accentColor }}
         >
           <IconComponent className="w-4 h-4 transition-transform duration-300 group-hover:scale-110" />
@@ -146,7 +146,7 @@ export const FinanceStatCard = ({
       <div className="flex items-center justify-between gap-2 pt-2 border-t border-white/[0.04]">
         <div className="flex items-center gap-1.5">
           <span
-            className={`inline-flex items-center gap-1 text-[11px] font-mono font-semibold px-2 py-0.5 rounded-md ${
+            className={`inline-flex items-center gap-1 text-[11px] font-mono font-semibold px-2.5 py-0.5 rounded-full ${
               isPositive
                 ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
                 : 'bg-rose-500/10 text-rose-400 border border-rose-500/20'

@@ -19,7 +19,9 @@ import {
   ChevronLeft,
   ChevronRight,
   User,
-  Sparkles
+  Sparkles,
+  UserCheck,
+  Layers
 } from 'lucide-react';
 
 export const Sidebar = ({ role = 'BUYER' }) => {
@@ -62,9 +64,10 @@ export const Sidebar = ({ role = 'BUYER' }) => {
       badgeColor: 'text-[#38BDF8] bg-[#38BDF8]/15 border-[#38BDF8]/30',
       links: [
         { to: '/admin/dashboard', label: 'Overview', icon: LayoutDashboard },
+        { to: '/admin/users', label: 'Platform Users', icon: UserCheck },
         { to: '/admin/catalogue', label: 'Vehicle Catalogue', icon: Car },
         { to: '/admin/dealers', label: 'Dealer Approvals', icon: Building2 },
-        { to: '/admin/groups', label: 'Group Management', icon: Users },
+        { to: '/admin/groups', label: 'Group Management', icon: Layers },
         { to: '/admin/moderation', label: 'Moderation Queue', icon: AlertTriangle },
         { to: '/admin/leads', label: 'Lead Audits', icon: FileCheck },
         { to: '/admin/audit', label: 'Audit Trail', icon: Shield },

@@ -26,14 +26,14 @@ export const TransferInfoCard = ({
 
   return (
     <motion.div
-      whileHover={{ y: -3, borderColor: 'rgba(255, 255, 255, 0.14)' }}
-      className="relative rounded-2xl bg-gradient-to-b from-[#17191D] to-[#111315] p-5 sm:p-6 border border-white/5 transition-all duration-300 flex flex-col justify-between"
+      whileHover={{ y: -3, borderColor: 'rgba(255, 255, 255, 0.16)' }}
+      className="relative rounded-[28px] sm:rounded-3xl bg-gradient-to-b from-[#17191D] to-[#111315] p-5 sm:p-6 border border-white/10 shadow-xl transition-all duration-300 flex flex-col justify-between"
     >
       <div>
         {/* Header */}
         <div className="flex items-center justify-between gap-3 mb-4">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-xl bg-[#ED1725]/10 border border-[#ED1725]/20 flex items-center justify-center text-[#ED1725]">
+          <div className="flex items-center gap-2.5">
+            <div className="w-10 h-10 rounded-full bg-[#ED1725]/10 border border-[#ED1725]/20 flex items-center justify-center text-[#ED1725] shadow-inner">
               <Tag className="w-4 h-4" />
             </div>
             <div>
@@ -43,7 +43,7 @@ export const TransferInfoCard = ({
               <p className="text-[11px] text-[#A1A1AA]">OEM Showroom vs Collective Net</p>
             </div>
           </div>
-          <span className="text-[11px] font-mono text-slate-400 bg-white/5 px-2.5 py-1 rounded-lg border border-white/5">
+          <span className="text-[11px] font-mono text-slate-400 bg-white/5 px-3 py-1 rounded-full border border-white/5">
             Ref: {referenceNumber}
           </span>
         </div>
@@ -146,7 +146,7 @@ export const TransferInfoCard = ({
       <div className="pt-5 mt-4 border-t border-white/5">
         <button
           onClick={onInitiateTransfer}
-          className="w-full py-2.5 px-3 rounded-xl bg-gradient-to-r from-[#ED1725] to-[#C0101C] hover:from-[#FF1F2F] hover:to-[#ED1725] text-white text-xs font-heading font-bold flex items-center justify-center gap-2 transition-all shadow-lg shadow-[#ED1725]/25"
+          className="w-full py-3 px-4 rounded-full bg-gradient-to-r from-[#ED1725] to-[#C0101C] hover:from-[#FF1F2F] hover:to-[#ED1725] text-white text-xs font-heading font-bold flex items-center justify-center gap-2 transition-all shadow-lg shadow-[#ED1725]/25 cursor-pointer"
         >
           <span>Broadcast Next Deal Tranche</span>
           <ArrowRight className="w-3.5 h-3.5" />

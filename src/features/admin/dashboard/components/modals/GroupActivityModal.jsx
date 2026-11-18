@@ -78,7 +78,7 @@ export const GroupActivityModal = ({ isOpen, onClose, group }) => {
                 <div className="text-xs text-[#A1A1AA] flex items-center gap-3 mt-1 flex-wrap">
                   <span>Market: <strong className="text-white">{group.city || 'Pune'}</strong></span>
                   <span>•</span>
-                  <span>Buyers: <strong className="text-emerald-400">{group.currentMembers || members.length || 1} / {group.targetMembers || 5}</strong></span>
+                  <span>Buyers: <strong className="text-emerald-400">{group.currentMembers || members.length || 1} / {group.targetMembers || 15}</strong></span>
                   <span>•</span>
                   <span className="font-mono text-slate-500">ID: {group.id}</span>
                 </div>

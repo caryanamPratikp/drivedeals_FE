@@ -263,7 +263,7 @@ export const GroupsPage = () => {
             const variant = group.variant || variants.find((v) => v.id === group.variantId);
             const car = group.car || cars.find((c) => c.id === variant?.carId || c.id === group.carId);
             const currentCount = group.currentMembers || group.memberIds?.length || 1;
-            const targetCount = group.targetMembers || 5;
+            const targetCount = group.targetMembers || 15;
             const progressPercent = Math.min(100, Math.round((currentCount / targetCount) * 100));
 
             return (

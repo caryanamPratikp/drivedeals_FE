@@ -42,6 +42,7 @@ import { DealerProfilePage } from './features/dealer/DealerProfilePage';
 
 // Admin pages
 import { AdminDashboard } from './features/admin/AdminDashboard';
+import { AdminUsersPage } from './features/admin/AdminUsersPage';
 import { AdminDealersPage } from './features/admin/AdminDealersPage';
 import { AdminGroupsPage } from './features/admin/AdminGroupsPage';
 import { AdminModerationPage } from './features/admin/AdminModerationPage';
@@ -126,6 +127,7 @@ export const router = createBrowserRouter([
     errorElement: <NotFoundPage />,
     children: [
       { path: 'dashboard', element: <AdminDashboard /> },
+      { path: 'users', element: <AdminUsersPage /> },
       { path: 'dealers', element: <AdminDealersPage /> },
       { path: 'groups', element: <AdminGroupsPage /> },
       { path: 'moderation', element: <AdminModerationPage /> },

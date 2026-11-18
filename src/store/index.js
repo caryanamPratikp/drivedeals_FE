@@ -90,7 +90,7 @@ function normalizeGroup(g) {
     variant,
     variantId: variant?.id || g.variantId,
     carId: car?.id || g.carId,
-    targetSize: g.targetMembers || g.targetSize || 5,
+    targetSize: g.targetMembers || g.targetSize || 15,
     minimumGroupSize: 3,
     memberIds,
     currentMembers: memberCount,
@@ -494,7 +494,7 @@ export const useAppStore = create((set, get) => ({
       const payload = {
         variantId: effectiveVariantId,
         city: city || 'Pune',
-        targetMembers: 5,
+        targetMembers: 15,
         signal: {
           timelineMonths,
           purchaseMode: 'FINANCE',
@@ -536,8 +536,8 @@ export const useAppStore = create((set, get) => ({
         selectedColourHex: vehicleConfig?.colourHex,
         imageUrl: vehicleConfig?.imageUrl,
         city: city || 'Pune',
-        targetMembers: 5,
-        targetSize: 5,
+        targetMembers: 15,
+        targetSize: 15,
         currentMembers: 1,
         memberIds: [buyerId || 'u-buyer-me'],
         stage: 'FORMATION',

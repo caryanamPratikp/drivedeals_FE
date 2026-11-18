@@ -20,15 +20,15 @@ export const EverydayBankCard = ({ bankCard, hideAmounts = false }) => {
 
   return (
     <motion.div
-      whileHover={{ y: -3, borderColor: 'rgba(255, 255, 255, 0.14)' }}
-      className="relative rounded-2xl bg-gradient-to-b from-[#17191D] to-[#111315] p-5 sm:p-6 border border-white/5 transition-all duration-300 flex flex-col justify-between"
+      whileHover={{ y: -3, borderColor: 'rgba(255, 255, 255, 0.16)' }}
+      className="relative rounded-[28px] sm:rounded-3xl bg-gradient-to-b from-[#17191D] to-[#111315] p-5 sm:p-6 border border-white/10 shadow-xl transition-all duration-300 flex flex-col justify-between"
     >
       <div>
         {/* Header */}
         <div className="flex items-center justify-between gap-3 mb-4">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-white">
-              <CreditCard className="w-4 h-4 text-[#ED1725]" />
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white shrink-0">
+              <CreditCard className="w-5 h-5 text-[#ED1725]" />
             </div>
             <div>
               <h3 className="text-sm font-heading font-bold text-white tracking-wide">
@@ -37,7 +37,7 @@ export const EverydayBankCard = ({ bankCard, hideAmounts = false }) => {
               <p className="text-[11px] text-[#A1A1AA]">{cardType}</p>
             </div>
           </div>
-          <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+          <span className="text-[10px] font-mono font-bold px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 shadow-sm">
             {status}
           </span>
         </div>
@@ -46,7 +46,7 @@ export const EverydayBankCard = ({ bankCard, hideAmounts = false }) => {
         <motion.div
           whileHover={{ scale: 1.02 }}
           transition={{ duration: 0.25 }}
-          className="relative w-full rounded-2xl p-5 sm:p-6 text-white overflow-hidden shadow-2xl border border-white/15 bg-gradient-to-br from-[#26282E] via-[#1A1C20] to-[#0D0E10]"
+          className="relative w-full rounded-2xl sm:rounded-3xl p-5 sm:p-6 text-white overflow-hidden shadow-2xl border border-white/15 bg-gradient-to-br from-[#26282E] via-[#1A1C20] to-[#0D0E10]"
         >
           {/* Subtle Brushed Metal & Speed Lines */}
           <div className="absolute inset-0 opacity-15 pointer-events-none bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:16px_16px]" />

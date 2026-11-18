@@ -162,7 +162,7 @@ export const AdminGroupsPage = () => {
                         <span className="font-heading font-bold text-white">
                           {group.currentMembers || group.memberIds?.length || 1}
                         </span>
-                        <span className="text-slate-500"> / {group.targetMembers || 5}</span>
+                        <span className="text-slate-500"> / {group.targetMembers || 15}</span>
                       </td>
 
                       <td className="p-4">

@@ -286,7 +286,7 @@ export const CarDetailPage = () => {
                   <h4 className="font-heading font-bold text-white text-sm">{g.variant?.name || 'Selected Variant'}</h4>
                   <div className="flex items-center gap-1.5 text-xs text-[#A1A1AA]">
                     <Users size={13} className="text-[#ED1725]" />
-                    <span>{g.currentMembers || 1} / {g.targetMembers || 5} Buyers Joined</span>
+                    <span>{g.currentMembers || 1} / {g.targetMembers || 15} Buyers Joined</span>
                   </div>
                 </div>
 
