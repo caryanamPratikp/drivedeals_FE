@@ -57,15 +57,14 @@ export const NotFoundPage = () => {
 
         <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-3">
           {isRealException ? (
-            <button
+            <PrimaryButton
+              size="md"
               onClick={() => window.location.reload()}
-              className="w-full sm:w-auto"
+              className="w-full sm:w-auto justify-center font-bold"
             >
-              <PrimaryButton size="md" className="w-full justify-center font-bold">
-                <RefreshCw size={15} />
-                <span>Reload Page</span>
-              </PrimaryButton>
-            </button>
+              <RefreshCw size={15} />
+              <span>Reload Page</span>
+            </PrimaryButton>
           ) : (
             <Link to="/" className="w-full sm:w-auto">
               <PrimaryButton size="md" className="w-full justify-center font-bold">

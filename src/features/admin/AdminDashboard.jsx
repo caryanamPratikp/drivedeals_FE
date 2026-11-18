@@ -38,6 +38,7 @@ export const AdminDashboard = () => {
     groups = [],
     users = [],
     leads = [],
+    quotations = [],
     auditEvents = [],
     adminNotifications = [],
     adminLoading = false,
