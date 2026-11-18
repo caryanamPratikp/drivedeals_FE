@@ -85,6 +85,7 @@ export const SignInPage = () => {
         role: role,
         city: city.trim(),
         dealershipName: role === 'DEALER' ? dealershipName.trim() : null,
+        brand: role === 'DEALER' ? 'Mahindra' : null,
       };
 
       const res = await loginWithOtp(`+91${cleanPhone}`, otp.trim(), profile);

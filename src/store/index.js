@@ -153,7 +153,11 @@ export const useAppStore = create((set, get) => ({
       set({ isLoading: true });
       const res = await authApi.verifyOtp(phone, otp, profile);
       const token = res.accessToken;
-      const user = res.user;
+      const user = {
+        ...res.user,
+        dealershipName: res.user?.dealershipName || profile.dealershipName,
+        brand: res.user?.brand || profile.brand || (res.user?.role === 'DEALER' ? 'Mahindra' : undefined),
+      };
 
       saveAuthSession(token, user);
 

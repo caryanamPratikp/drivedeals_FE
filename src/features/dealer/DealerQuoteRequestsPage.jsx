@@ -35,25 +35,47 @@ export const DealerQuoteRequestsPage = () => {
   const isAllBrandDealer =
     dealerBrand.toUpperCase() === 'ALL' ||
     dealerBrand.toUpperCase() === 'MULTI-BRAND' ||
+    dealerBrand.toUpperCase() === 'MULTI BRAND' ||
     dealerBrand.toUpperCase() === 'ALL BRANDS';
 
   const [statusFilter, setStatusFilter] = useState('ALL');
   const [brandFilter, setBrandFilter] = useState('ALL');
 
+  // Robust brand resolver for any group representation
+  const resolveGroupBrand = (grp) => {
+    if (!grp) return '';
+    const v = grp.variant || (variants || []).find((varItem) => varItem.id === grp.variantId);
+    const c = grp.car || (cars || []).find((carItem) => carItem.id === v?.carId || carItem.id === grp.carId);
+    return (
+      c?.brand ||
+      grp.car?.brand ||
+      grp.carBrand ||
+      (grp.carModel ? grp.carModel.split(' ')[0] : '') ||
+      (grp.name ? grp.name.split(' ')[0] : '') ||
+      ''
+    ).trim().toLowerCase();
+  };
+
+  const matchesFranchiseBrand = (grp) => {
+    if (isAllBrandDealer) return true;
+    const b = resolveGroupBrand(grp);
+    const target = dealerBrand.toLowerCase();
+    return b.includes(target) || target.includes(b);
+  };
+
   // Derive RFQ quotation opportunities from active buyer groups scoped strictly by dealer franchise brand
   const effectiveRequests = useMemo(() => {
-    const explicit = quoteRequests.filter((r) => !myDealerId || r.dealerId === myDealerId);
+    const explicit = (quoteRequests || [])
+      .filter((r) => !myDealerId || r.dealerId === myDealerId)
+      .filter((r) => {
+        const g = (groups || []).find((grp) => grp.id === r.groupId);
+        return matchesFranchiseBrand(g);
+      });
     const existingGroupIds = new Set(explicit.map((r) => r.groupId));
 
-    const derived = groups
+    const derived = (groups || [])
       .filter((g) => !existingGroupIds.has(g.id))
-      .filter((g) => {
-        if (isAllBrandDealer) return true;
-        const v = g?.variant || variants.find((varItem) => varItem.id === g?.variantId);
-        const c = g?.car || cars.find((carItem) => carItem.id === v?.carId || carItem.id === g?.carId);
-        const b = (c?.brand || '').toLowerCase();
-        return b.includes(dealerBrand.toLowerCase()) || dealerBrand.toLowerCase().includes(b);
-      })
+      .filter((g) => matchesFranchiseBrand(g))
       .map((g) => {
         const hasQuote = (quotations || []).some(
           (q) => q.groupId === g.id && (!myDealerId || q.dealerId === myDealerId || q.dealer?.id === myDealerId)
@@ -69,23 +91,14 @@ export const DealerQuoteRequestsPage = () => {
         };
       });
 
-    return [...explicit, ...derived].filter((r) => {
-      if (isAllBrandDealer) return true;
-      const g = groups.find((grp) => grp.id === r.groupId);
-      const v = g?.variant || variants.find((varItem) => varItem.id === g?.variantId);
-      const c = g?.car || cars.find((carItem) => carItem.id === v?.carId || carItem.id === g?.carId);
-      const b = (c?.brand || '').toLowerCase();
-      return b.includes(dealerBrand.toLowerCase()) || dealerBrand.toLowerCase().includes(b);
-    });
+    return [...explicit, ...derived];
   }, [quoteRequests, groups, quotations, myDealerId, isAllBrandDealer, dealerBrand, variants, cars]);
 
   const filteredRequests = effectiveRequests.filter((r) => {
     if (statusFilter !== 'ALL' && r.status !== statusFilter) return false;
     if (isAllBrandDealer && brandFilter !== 'ALL') {
-      const g = groups.find((grp) => grp.id === r.groupId);
-      const v = g?.variant || variants.find((varItem) => varItem.id === g?.variantId);
-      const c = g?.car || cars.find((carItem) => carItem.id === v?.carId || carItem.id === g?.carId);
-      const b = (c?.brand || '').toLowerCase();
+      const g = (groups || []).find((grp) => grp.id === r.groupId);
+      const b = resolveGroupBrand(g);
       if (!b.includes(brandFilter.toLowerCase())) return false;
     }
     return true;

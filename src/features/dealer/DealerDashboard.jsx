@@ -56,20 +56,42 @@ export const DealerDashboard = () => {
   const isAllBrandDealer =
     dealerBrand.toUpperCase() === 'ALL' ||
     dealerBrand.toUpperCase() === 'MULTI-BRAND' ||
+    dealerBrand.toUpperCase() === 'MULTI BRAND' ||
     dealerBrand.toUpperCase() === 'ALL BRANDS';
 
+  // Robust brand resolver for any group representation
+  const resolveGroupBrand = (grp) => {
+    if (!grp) return '';
+    const v = grp.variant || (variants || []).find((item) => item.id === grp.variantId);
+    const c = grp.car || (cars || []).find((item) => item.id === v?.carId || item.id === grp.carId);
+    return (
+      c?.brand ||
+      grp.car?.brand ||
+      grp.carBrand ||
+      (grp.carModel ? grp.carModel.split(' ')[0] : '') ||
+      (grp.name ? grp.name.split(' ')[0] : '') ||
+      ''
+    ).trim().toLowerCase();
+  };
+
+  const matchesFranchiseBrand = (grp) => {
+    if (isAllBrandDealer) return true;
+    const b = resolveGroupBrand(grp);
+    const target = dealerBrand.toLowerCase();
+    return b.includes(target) || target.includes(b);
+  };
+
   // Scoped data for this dealer - scoped strictly by dealer franchise brand
-  const explicitRequests = (quoteRequests || []).filter((r) => !dealer.id || r.dealerId === dealer.id);
+  const explicitRequests = (quoteRequests || [])
+    .filter((r) => !dealer.id || r.dealerId === dealer.id)
+    .filter((r) => {
+      const g = (groups || []).find((grp) => grp.id === r.groupId);
+      return matchesFranchiseBrand(g);
+    });
   const existingGroupIds = new Set(explicitRequests.map((r) => r.groupId));
   const derivedRequests = (groups || [])
     .filter((g) => !existingGroupIds.has(g.id))
-    .filter((g) => {
-      if (isAllBrandDealer) return true;
-      const v = g?.variant || variants.find((item) => item.id === g?.variantId);
-      const c = g?.car || cars.find((item) => item.id === v?.carId || item.id === g?.carId);
-      const b = (c?.brand || '').toLowerCase();
-      return b.includes(dealerBrand.toLowerCase()) || dealerBrand.toLowerCase().includes(b);
-    })
+    .filter((g) => matchesFranchiseBrand(g))
     .map((g) => ({
       id: `rfq-${g.id}`,
       groupId: g.id,
