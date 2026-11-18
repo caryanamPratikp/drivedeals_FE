@@ -38,6 +38,7 @@ export const AdminDashboard = () => {
   const {
     currentUser,
     adminAnalytics,
+    cars = [],
     dealers = [],
     groups = [],
     users = [],
@@ -45,6 +46,7 @@ export const AdminDashboard = () => {
     auditEvents = [],
     adminLoading = false,
     fetchAdminOverview,
+    fetchCars,
     reviewDealerApplication,
   } = useAppStore();
 
@@ -69,7 +71,10 @@ export const AdminDashboard = () => {
   // Fetch admin telemetry on mount
   useEffect(() => {
     fetchAdminOverview();
-  }, [fetchAdminOverview]);
+    if (fetchCars) {
+      fetchCars();
+    }
+  }, [fetchAdminOverview, fetchCars]);
 
   // Global keyboard shortcut: Ctrl+K or Cmd+K for search
   useEffect(() => {
@@ -205,7 +210,7 @@ export const AdminDashboard = () => {
   const firstActiveGroup = groups[0] || null;
   const benchmarkPrice = firstActiveGroup?.variant?.exShowroomPrice
     ? Number(firstActiveGroup.variant.exShowroomPrice)
-    : cars[0]?.illustrativeStartingPrice || 1099900;
+    : (cars && cars[0]?.illustrativeStartingPrice) || 1099900;
   const collectivePrice = Math.round(benchmarkPrice * 0.932); // 6.8% collective discount
   const savingsDelta = benchmarkPrice - collectivePrice;
 
@@ -241,7 +246,7 @@ export const AdminDashboard = () => {
         y: i === 0 ? 38 : i === 1 ? 44 : 20,
         buyers: h.buyers || 0,
         grossDemand: Number(h.volume) >= 10000000 ? `₹${(Number(h.volume) / 10000000).toFixed(2)} Cr` : `₹${(Number(h.volume) / 100000).toFixed(1)} L`,
-        topModel: groups[i]?.carModel || cars[i]?.modelName || 'Active Demand',
+        topModel: groups[i]?.carModel || (cars && cars[i]?.modelName) || 'Active Demand',
         avgConcession: '6.8%',
         activityLevel: h.buyers > 5 ? 'High' : 'Normal',
       }))
