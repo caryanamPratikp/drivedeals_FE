@@ -26,17 +26,34 @@ export const DealerQuoteRequestsPage = () => {
   }, [fetchGroups, fetchCars, cars.length]);
 
   const myDealerId = currentUser?.dealerId;
-  const dealer = dealers.find((d) => d.id === myDealerId) || { businessName: currentUser?.dealershipName || 'Your Dealership' };
+  const dealer = dealers.find((d) => d.id === myDealerId) || {
+    businessName: currentUser?.dealershipName || 'Your Dealership',
+    brand: currentUser?.brand || 'Mahindra',
+  };
+
+  const dealerBrand = (currentUser?.brand || dealer?.brand || dealer?.brandAuthorized || 'Mahindra').trim();
+  const isAllBrandDealer =
+    dealerBrand.toUpperCase() === 'ALL' ||
+    dealerBrand.toUpperCase() === 'MULTI-BRAND' ||
+    dealerBrand.toUpperCase() === 'ALL BRANDS';
+
   const [statusFilter, setStatusFilter] = useState('ALL');
   const [brandFilter, setBrandFilter] = useState('ALL');
 
-  // Derive RFQ quotation opportunities from active buyer groups
+  // Derive RFQ quotation opportunities from active buyer groups scoped strictly by dealer franchise brand
   const effectiveRequests = useMemo(() => {
     const explicit = quoteRequests.filter((r) => !myDealerId || r.dealerId === myDealerId);
     const existingGroupIds = new Set(explicit.map((r) => r.groupId));
 
     const derived = groups
       .filter((g) => !existingGroupIds.has(g.id))
+      .filter((g) => {
+        if (isAllBrandDealer) return true;
+        const v = g?.variant || variants.find((varItem) => varItem.id === g?.variantId);
+        const c = g?.car || cars.find((carItem) => carItem.id === v?.carId || carItem.id === g?.carId);
+        const b = (c?.brand || '').toLowerCase();
+        return b.includes(dealerBrand.toLowerCase()) || dealerBrand.toLowerCase().includes(b);
+      })
       .map((g) => {
         const hasQuote = (quotations || []).some(
           (q) => q.groupId === g.id && (!myDealerId || q.dealerId === myDealerId || q.dealer?.id === myDealerId)
@@ -52,12 +69,19 @@ export const DealerQuoteRequestsPage = () => {
         };
       });
 
-    return [...explicit, ...derived];
-  }, [quoteRequests, groups, quotations, myDealerId]);
+    return [...explicit, ...derived].filter((r) => {
+      if (isAllBrandDealer) return true;
+      const g = groups.find((grp) => grp.id === r.groupId);
+      const v = g?.variant || variants.find((varItem) => varItem.id === g?.variantId);
+      const c = g?.car || cars.find((carItem) => carItem.id === v?.carId || carItem.id === g?.carId);
+      const b = (c?.brand || '').toLowerCase();
+      return b.includes(dealerBrand.toLowerCase()) || dealerBrand.toLowerCase().includes(b);
+    });
+  }, [quoteRequests, groups, quotations, myDealerId, isAllBrandDealer, dealerBrand, variants, cars]);
 
   const filteredRequests = effectiveRequests.filter((r) => {
     if (statusFilter !== 'ALL' && r.status !== statusFilter) return false;
-    if (brandFilter !== 'ALL') {
+    if (isAllBrandDealer && brandFilter !== 'ALL') {
       const g = groups.find((grp) => grp.id === r.groupId);
       const v = g?.variant || variants.find((varItem) => varItem.id === g?.variantId);
       const c = g?.car || cars.find((carItem) => carItem.id === v?.carId || carItem.id === g?.carId);
@@ -89,19 +113,40 @@ export const DealerQuoteRequestsPage = () => {
         </div>
 
         <div className="flex flex-wrap items-center gap-2.5">
-          <select
-            value={brandFilter}
-            onChange={(e) => setBrandFilter(e.target.value)}
-            className="px-4 py-2.5 text-xs font-bold rounded-xl border border-white/10 bg-[#17191D] text-white focus:outline-none focus:border-[#ED1725]"
-          >
-            <option value="ALL">All Brands</option>
-            <option value="Mahindra">Mahindra</option>
-            <option value="Kia">Kia</option>
-            <option value="Tata">Tata Motors</option>
-            <option value="Hyundai">Hyundai</option>
-            <option value="Maruti">Maruti Suzuki</option>
-            <option value="Toyota">Toyota</option>
-          </select>
+          {isAllBrandDealer ? (
+            <div className="flex items-center gap-2">
+              <span className="px-3 py-1.5 rounded-xl text-xs font-bold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
+                Multi-Brand (All)
+              </span>
+              <select
+                value={brandFilter}
+                onChange={(e) => setBrandFilter(e.target.value)}
+                className="px-4 py-2 text-xs font-bold rounded-xl border border-white/10 bg-[#17191D] text-white focus:outline-none focus:border-[#ED1725]"
+              >
+                <option value="ALL">All Brands</option>
+                <option value="Mahindra">Mahindra</option>
+                <option value="Kia">Kia</option>
+                <option value="Tata">Tata Motors</option>
+                <option value="Hyundai">Hyundai</option>
+                <option value="Maruti">Maruti Suzuki</option>
+                <option value="Toyota">Toyota</option>
+              </select>
+            </div>
+          ) : (
+            <div className="flex items-center gap-2.5">
+              <span className="px-3.5 py-2 rounded-xl text-xs font-bold bg-[#ED1725]/15 text-[#ED1725] border border-[#ED1725]/30 flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-[#ED1725]" />
+                <span>Franchise: {dealerBrand} Groups Only</span>
+              </span>
+              <Link
+                to="/dealer/profile"
+                className="text-xs text-[#A1A1AA] hover:text-white underline underline-offset-2 font-medium"
+                title="Switch authorized franchise brand"
+              >
+                Change Brand
+              </Link>
+            </div>
+          )}
 
           <select
             value={statusFilter}

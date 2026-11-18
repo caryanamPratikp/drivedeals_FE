@@ -47,16 +47,29 @@ export const DealerDashboard = () => {
   const dealer = (dealers || []).find((d) => d.id === myDealerId) || {
     businessName: currentUser?.dealershipName || currentUser?.name || 'Authorized OEM Dealership',
     legalEntityName: currentUser?.dealershipName || 'Franchise Partner',
-    brand: currentUser?.brand || 'Authorized',
+    brand: currentUser?.brand || 'Mahindra',
     city: currentUser?.city || 'Pune',
     address: currentUser?.address || 'Official Dealership Regional Showroom'
   };
 
-  // Scoped data for this dealer
+  const dealerBrand = (currentUser?.brand || dealer?.brand || 'Mahindra').trim();
+  const isAllBrandDealer =
+    dealerBrand.toUpperCase() === 'ALL' ||
+    dealerBrand.toUpperCase() === 'MULTI-BRAND' ||
+    dealerBrand.toUpperCase() === 'ALL BRANDS';
+
+  // Scoped data for this dealer - scoped strictly by dealer franchise brand
   const explicitRequests = (quoteRequests || []).filter((r) => !dealer.id || r.dealerId === dealer.id);
   const existingGroupIds = new Set(explicitRequests.map((r) => r.groupId));
   const derivedRequests = (groups || [])
     .filter((g) => !existingGroupIds.has(g.id))
+    .filter((g) => {
+      if (isAllBrandDealer) return true;
+      const v = g?.variant || variants.find((item) => item.id === g?.variantId);
+      const c = g?.car || cars.find((item) => item.id === v?.carId || item.id === g?.carId);
+      const b = (c?.brand || '').toLowerCase();
+      return b.includes(dealerBrand.toLowerCase()) || dealerBrand.toLowerCase().includes(b);
+    })
     .map((g) => ({
       id: `rfq-${g.id}`,
       groupId: g.id,
@@ -69,7 +82,9 @@ export const DealerDashboard = () => {
       currentMembers: g.currentMembers || g.memberIds?.length || 1,
     }));
   const myQuoteRequests = [...explicitRequests, ...derivedRequests];
-  const myQuotations = (quotations || []).filter((q) => !dealer.id || q.dealerId === dealer.id);
+  const myQuotations = (quotations || []).filter(
+    (q) => !dealer.id || q.dealerId === dealer.id || q.dealer?.id === dealer.id
+  );
   const myPublishedVersions = (quotationVersions || []).filter(
     (v) => !dealer.id || (v.createdByDealerId === dealer.id && v.status === 'PUBLISHED')
   );

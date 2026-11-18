@@ -723,7 +723,11 @@ export const useAppStore = create((set, get) => ({
     try {
       const quotes = await quotationsApi.getQuotationsForGroup(groupId);
       const quoteList = Array.isArray(quotes) ? quotes : [];
-      const versions = quoteList.flatMap((q) => {
+      const normalizedQuotes = quoteList.map((q) => ({
+        ...q,
+        dealerId: q.dealer?.id || q.dealerId,
+      }));
+      const versions = normalizedQuotes.flatMap((q) => {
         const history = Array.isArray(q.versionHistory) ? q.versionHistory : [];
         const current = q.currentVersion ? [q.currentVersion] : [];
         const all = current.length > 0 ? current : history;
@@ -731,7 +735,7 @@ export const useAppStore = create((set, get) => ({
           ...v,
           quotationId: q.id,
           groupId: q.groupId,
-          createdByDealerId: q.dealer?.id,
+          createdByDealerId: q.dealer?.id || q.dealerId,
           dealer: q.dealer,
           status: v.status || 'PUBLISHED',
           calculatedOnRoadPrice: v.totalOnRoadPrice || v.calculatedOnRoadPrice || 0,
@@ -743,7 +747,7 @@ export const useAppStore = create((set, get) => ({
         }));
       });
 
-      const dealersFromQuotes = quoteList
+      const dealersFromQuotes = normalizedQuotes
         .map((q) => q.dealer)
         .filter(Boolean)
         .map((d) => ({
@@ -754,18 +758,75 @@ export const useAppStore = create((set, get) => ({
           rating: d.rating,
         }));
 
-      set((state) => ({
-        quotations: quoteList,
-        quotationVersions: versions,
-        dealers: [
-          ...state.dealers,
-          ...dealersFromQuotes.filter((d) => !state.dealers.some((ex) => ex.id === d.id)),
-        ],
-      }));
-      return quoteList;
+      set((state) => {
+        const existingWithoutGroup = state.quotations.filter((q) => q.groupId !== groupId);
+        return {
+          quotations: [...normalizedQuotes, ...existingWithoutGroup],
+          quotationVersions: [
+            ...versions,
+            ...state.quotationVersions.filter((v) => v.groupId !== groupId),
+          ],
+          dealers: [
+            ...state.dealers,
+            ...dealersFromQuotes.filter((d) => !state.dealers.some((ex) => ex.id === d.id)),
+          ],
+        };
+      });
+      return normalizedQuotes;
     } catch (err) {
       console.error(`Failed to fetch quotations for group ${groupId}:`, err);
       return [];
+    }
+  },
+
+  fetchDealerQuotations: async () => {
+    try {
+      const quotes = await quotationsApi.getDealerQuotations();
+      const quoteList = Array.isArray(quotes) ? quotes : [];
+      const normalizedQuotes = quoteList.map((q) => ({
+        ...q,
+        dealerId: q.dealer?.id || q.dealerId || get().currentUser?.dealerId,
+      }));
+      const versions = normalizedQuotes.flatMap((q) => {
+        const history = Array.isArray(q.versionHistory) ? q.versionHistory : [];
+        const current = q.currentVersion ? [q.currentVersion] : [];
+        const all = current.length > 0 ? current : history;
+        return all.map((v) => ({
+          ...v,
+          quotationId: q.id,
+          groupId: q.groupId,
+          createdByDealerId: q.dealer?.id || q.dealerId,
+          dealer: q.dealer,
+          status: v.status || 'PUBLISHED',
+          calculatedOnRoadPrice: v.totalOnRoadPrice || v.calculatedOnRoadPrice || 0,
+          discountAmount: v.groupDiscount || v.discountAmount || 0,
+          deliveryMinDays: v.deliveryTimelineWeeks ? v.deliveryTimelineWeeks * 7 : (v.deliveryMinDays || 7),
+          deliveryMaxDays: v.deliveryTimelineWeeks ? v.deliveryTimelineWeeks * 7 + 7 : (v.deliveryMaxDays || 21),
+          expiresAt: v.validUntil || v.expiresAt,
+          stockStatus: v.stockStatus || 'IN_STOCK',
+        }));
+      });
+
+      set((state) => {
+        const newIds = new Set(normalizedQuotes.map((q) => q.id));
+        const mergedQuotations = [
+          ...normalizedQuotes,
+          ...state.quotations.filter((q) => !newIds.has(q.id)),
+        ];
+        const newVerIds = new Set(versions.map((v) => v.id));
+        const mergedVersions = [
+          ...versions,
+          ...state.quotationVersions.filter((v) => !newVerIds.has(v.id)),
+        ];
+        return {
+          quotations: mergedQuotations,
+          quotationVersions: mergedVersions,
+        };
+      });
+      return normalizedQuotes;
+    } catch (err) {
+      console.warn('Backend fetchDealerQuotations error, using client cache:', err);
+      return get().quotations;
     }
   },
 
@@ -806,8 +867,61 @@ export const useAppStore = create((set, get) => ({
         res = await quotationsApi.submitQuotation(input.groupId, payload);
       }
 
+      // Immediately register the quotation in local state so it appears in My Price Quotes instantly
+      const effectiveQuoteId = res?.id || res?.data?.id || input.quotationId || ('quote-' + (input.dealerId || get().currentUser?.dealerId || 'dealer') + '-' + input.groupId);
+      const calculatedTotal = exShowroom + registration + insurance + accessories + other - discount;
+      const immediateVersion = {
+        id: res?.currentVersion?.id || res?.data?.currentVersion?.id || generateId('ver'),
+        quotationId: effectiveQuoteId,
+        groupId: input.groupId,
+        createdByDealerId: input.dealerId || get().currentUser?.dealerId,
+        versionNumber: res?.currentVersion?.versionNumber || 1,
+        status: 'PUBLISHED',
+        exShowroomPrice: exShowroom,
+        registrationCharges: registration,
+        insuranceAmount: insurance,
+        accessoriesAmount: accessories,
+        otherCharges: other,
+        discountAmount: discount,
+        calculatedOnRoadPrice: calculatedTotal,
+        deliveryMinDays: input.deliveryMinDays || 7,
+        deliveryMaxDays: input.deliveryMaxDays || 14,
+        validityDays: validityDays,
+        stockStatus: input.stockStatus || 'IN_STOCK',
+        note: input.note || '',
+        createdAt: new Date().toISOString(),
+      };
+
+      const immediateQuotation = {
+        id: effectiveQuoteId,
+        groupId: input.groupId,
+        dealerId: input.dealerId || get().currentUser?.dealerId,
+        dealer: get().dealers.find((d) => d.id === (input.dealerId || get().currentUser?.dealerId)) || {
+          id: input.dealerId || get().currentUser?.dealerId,
+          dealershipName: get().currentUser?.dealershipName || 'Authorized Dealership',
+          brand: get().currentUser?.brand || 'ALL',
+          city: 'Pune',
+        },
+        currentVersion: immediateVersion,
+        versionHistory: [immediateVersion],
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      };
+
+      set((state) => ({
+        quotations: [
+          immediateQuotation,
+          ...state.quotations.filter((q) => q.id !== effectiveQuoteId),
+        ],
+        quotationVersions: [
+          immediateVersion,
+          ...state.quotationVersions.filter((v) => v.id !== immediateVersion.id),
+        ],
+      }));
+
       await get().fetchQuotations(input.groupId);
-      return { success: true, versionId: res?.id || res?.data?.id || generateId('ver') };
+      await get().fetchDealerQuotations();
+      return { success: true, versionId: immediateVersion.id };
     } catch (err) {
       console.warn('Backend quotation publish error, applying client-state fallback:', err);
       // Fallback local quotation update so dealer UX is never blocked

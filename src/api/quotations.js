@@ -4,6 +4,9 @@ export const quotationsApi = {
   getQuotationsForGroup: (groupId) =>
     apiClient(`/groups/${groupId}/quotations`),
 
+  getDealerQuotations: () =>
+    apiClient('/dealer/quotations'),
+
   getQuotationById: (id) =>
     apiClient(`/quotations/${id}`),
 

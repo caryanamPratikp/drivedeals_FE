@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useAppStore } from '../../store';
@@ -9,10 +9,31 @@ import { EmptyState } from '../../components/common/EmptyState';
 import { PrimaryButton, SecondaryButton } from '../../components/common/Buttons';
 
 export const DealerOffersPage = () => {
-  const { quotations = [], quotationVersions = [], dealers = [], variants = [], cars = [], currentUser } =
-    useAppStore();
+  const {
+    quotations = [],
+    quotationVersions = [],
+    dealers = [],
+    groups = [],
+    variants = [],
+    cars = [],
+    currentUser,
+    fetchDealerQuotations,
+    fetchGroups,
+    fetchCars,
+  } = useAppStore();
+
+  useEffect(() => {
+    if (typeof fetchDealerQuotations === 'function') {
+      fetchDealerQuotations();
+    }
+    if (groups.length === 0) fetchGroups();
+    if (cars.length === 0) fetchCars();
+  }, [fetchDealerQuotations, fetchGroups, fetchCars, groups.length, cars.length]);
+
   const myDealerId = currentUser?.dealerId;
-  const myQuotations = quotations.filter((q) => !myDealerId || q.dealerId === myDealerId);
+  const myQuotations = (quotations || []).filter(
+    (q) => !myDealerId || q.dealerId === myDealerId || q.dealer?.id === myDealerId || (currentUser?.id && q.dealer?.id === currentUser?.id)
+  );
 
   return (
     <div className="space-y-8 select-none">
@@ -51,13 +72,22 @@ export const DealerOffersPage = () => {
       ) : (
         <div className="space-y-4">
           {myQuotations.map((quote) => {
-            const variant = variants.find((v) => v.id === quote.variantId);
-            const car = cars.find((c) => c.id === variant?.carId);
+            const group = groups.find((g) => g.id === quote.groupId);
+            const variant =
+              group?.variant ||
+              variants.find((v) => v.id === quote.variantId || v.id === group?.variantId) ||
+              { name: 'Selected Trim' };
+            const car =
+              group?.car ||
+              cars.find((c) => c.id === variant?.carId || c.id === group?.carId) ||
+              { brand: 'Vehicle', modelName: 'Model' };
             const versions = quotationVersions
               .filter((v) => v.quotationId === quote.id)
               .sort((a, b) => b.versionNumber - a.versionNumber);
             const currentVersion =
-              versions.find((v) => v.status === 'PUBLISHED') || versions[0] || {
+              quote.currentVersion ||
+              versions.find((v) => v.status === 'PUBLISHED') ||
+              versions[0] || {
                 versionNumber: 1,
                 calculatedOnRoadPrice: 1500000,
                 discountAmount: 25000,

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useAppStore } from '../../store';
-import { ShieldCheck, Eye, Send, AlertCircle, X, Sparkles, Building2 } from 'lucide-react';
+import { ShieldCheck, Eye, Send, AlertCircle, X, Sparkles, Building2, CheckCircle2 } from 'lucide-react';
 import { calculateOnRoadPrice, validatePriceBreakdown } from '../../domain/pricing';
 import { formatINR } from '../../lib/currency';
 import { ConfirmationModal } from '../../components/common/ConfirmationModal';
@@ -53,32 +53,21 @@ export const QuotationComposer = ({
   const [showPublishConfirm, setShowPublishConfirm] = useState(false);
   const [formError, setFormError] = useState(null);
   const [submitting, setSubmitting] = useState(false);
+  const [appliedDiscountPercent, setAppliedDiscountPercent] = useState(3);
+  const [discountFeedback, setDiscountFeedback] = useState(null);
 
-  // Helper presets
-  const applyPreset1162 = () => {
-    setBreakdown({
-      exShowroomPrice: basePrice,
-      registrationCharges: Math.round(basePrice * 0.10),
-      insuranceAmount: Math.round(basePrice * 0.045),
-      accessoriesAmount: 12000,
-      otherCharges: 0,
-      discountAmount: Math.round(basePrice * 0.03),
-    });
-    setDeliveryMinDays(7);
-    setDeliveryMaxDays(10);
-  };
-
-  const applyPreset1362 = () => {
-    setBreakdown({
-      exShowroomPrice: basePrice,
-      registrationCharges: Math.round(basePrice * 0.10),
-      insuranceAmount: Math.round(basePrice * 0.04),
-      accessoriesAmount: 8000,
-      otherCharges: 0,
-      discountAmount: Math.round(basePrice * 0.05),
-    });
-    setDeliveryMinDays(5);
-    setDeliveryMaxDays(12);
+  // Helper presets - dynamically recalculate percentage based on current ex-showroom
+  const applyDiscountPercent = (percent) => {
+    const currentEx = Number(breakdown.exShowroomPrice) || basePrice;
+    const discount = Math.round(currentEx * (percent / 100));
+    setBreakdown((prev) => ({
+      ...prev,
+      exShowroomPrice: currentEx,
+      discountAmount: discount,
+    }));
+    setAppliedDiscountPercent(percent);
+    setDiscountFeedback(`Applied ${percent}% Group Discount: −₹${discount.toLocaleString('en-IN')}`);
+    setTimeout(() => setDiscountFeedback(null), 3500);
   };
 
   const handlePublishSubmit = async () => {
@@ -146,14 +135,42 @@ export const QuotationComposer = ({
 
         {/* Spec Preset Action Buttons */}
         <div className="flex flex-wrap items-center gap-2">
-          <SecondaryButton size="sm" onClick={applyPreset1162} title="Apply Standard 3% Group Discount">
-            Apply 3% Discount
-          </SecondaryButton>
-          <SecondaryButton size="sm" onClick={applyPreset1362} title="Apply Aggressive 5% Group Discount">
-            Apply 5% Discount
-          </SecondaryButton>
+          <button
+            type="button"
+            onClick={() => applyDiscountPercent(3)}
+            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer border ${
+              appliedDiscountPercent === 3
+                ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/40 shadow-sm'
+                : 'bg-[#17191D] text-[#A1A1AA] hover:text-white border-white/10 hover:border-white/20'
+            }`}
+            title="Calculate and apply 3% Group Concession based on Ex-Showroom"
+          >
+            <span>Apply 3% Discount</span>
+            {appliedDiscountPercent === 3 && <CheckCircle2 size={13} className="text-emerald-400" />}
+          </button>
+
+          <button
+            type="button"
+            onClick={() => applyDiscountPercent(5)}
+            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer border ${
+              appliedDiscountPercent === 5
+                ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/40 shadow-sm'
+                : 'bg-[#17191D] text-[#A1A1AA] hover:text-white border-white/10 hover:border-white/20'
+            }`}
+            title="Calculate and apply aggressive 5% Group Concession based on Ex-Showroom"
+          >
+            <span>Apply 5% Discount</span>
+            {appliedDiscountPercent === 5 && <CheckCircle2 size={13} className="text-emerald-400" />}
+          </button>
         </div>
       </div>
+
+      {discountFeedback && (
+        <div className="p-3 bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 rounded-2xl text-xs flex items-center gap-2 animate-in fade-in duration-200 shadow-md">
+          <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+          <span className="font-bold">{discountFeedback}</span>
+        </div>
+      )}
 
       {isBrandMismatch && (
         <div className="p-4 bg-amber-500/10 border border-amber-500/30 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs text-amber-300 shadow-lg">
