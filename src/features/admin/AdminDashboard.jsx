@@ -15,14 +15,12 @@ import {
   Sparkles,
 } from 'lucide-react';
 import { useAppStore } from '../../store';
-import { mockFinanceData } from './dashboard/data/mockFinanceData';
 import { FinanceStatCard } from './dashboard/components/FinanceStatCard';
 import { TransferInfoCard } from './dashboard/components/TransferInfoCard';
 import { SpendingMapCard } from './dashboard/components/SpendingMapCard';
 import { BudgetStatsCard } from './dashboard/components/BudgetStatsCard';
 import { SavingsScreen } from './dashboard/components/SavingsScreen';
 import { LiveOperationsTab } from './dashboard/components/LiveOperationsTab';
-
 // Modals
 import { SearchModal } from './dashboard/components/modals/SearchModal';
 import { NotificationPopover } from './dashboard/components/modals/NotificationPopover';
@@ -69,8 +67,8 @@ export const AdminDashboard = () => {
 
   const unreadCount = notificationsList.filter((n) => !n.read).length;
 
-  // Local Goals State for Savings Screen
-  const [customGoals, setCustomGoals] = useState(mockFinanceData.savingsGoals);
+  // Local Goals State for Savings Screen (purely dynamic from live collectives, zero static mocks)
+  const [customGoals, setCustomGoals] = useState([]);
 
   // Fetch admin telemetry on mount
   useEffect(() => {
@@ -195,36 +193,36 @@ export const AdminDashboard = () => {
     },
   ];
 
-  // 3. Dynamic Transfer Details from DB groups
+  // 3. Dynamic Transfer Details from DB groups (zero static fallback)
   const firstActiveGroup = (groups || []).filter(Boolean)[0] || null;
   const benchmarkPrice = firstActiveGroup?.variant?.exShowroomPrice
     ? Number(firstActiveGroup.variant.exShowroomPrice)
-    : (cars && cars[0]?.illustrativeStartingPrice) || 1099900;
-  const collectivePrice = Math.round(benchmarkPrice * 0.932); // 6.8% collective discount
+    : (cars && cars[0]?.illustrativeStartingPrice) || 0;
+  const collectivePrice = benchmarkPrice > 0 ? Math.round(benchmarkPrice * 0.932) : 0;
   const savingsDelta = benchmarkPrice - collectivePrice;
 
   const dynamicTransferDetails = {
-    referenceNumber: firstActiveGroup ? `GRP-${(firstActiveGroup.id || '1').substring(0, 8).toUpperCase()}` : 'DD-SETTLE-LIVE',
+    referenceNumber: firstActiveGroup ? `GRP-${(firstActiveGroup.id || '1').substring(0, 8).toUpperCase()}` : 'NO-ACTIVE-COLLECTIVE',
     oemBenchmark: {
       currency: 'INR',
       amount: benchmarkPrice,
-      label: firstActiveGroup ? `${firstActiveGroup.carModel || 'Vehicle'} OEM Base Price` : 'OEM Showroom Base Price',
+      label: firstActiveGroup ? `${firstActiveGroup.carModel || 'Vehicle'} OEM Base Price` : 'No Active Collective',
     },
     negotiatedCollective: {
       currency: 'INR',
       amount: collectivePrice,
-      label: firstActiveGroup ? `${firstActiveGroup.carModel || 'Vehicle'} Group Price (${firstActiveGroup.currentMembers || 1}+ Buyers)` : 'Collective Group Price',
+      label: firstActiveGroup ? `${firstActiveGroup.carModel || 'Vehicle'} Group Price (${firstActiveGroup.currentMembers || 1}+ Buyers)` : 'Awaiting Groups in DB',
     },
-    concessionDelta: `₹${savingsDelta.toLocaleString('en-IN')} Saved / Car (6.8%)`,
+    concessionDelta: savingsDelta > 0 ? `₹${savingsDelta.toLocaleString('en-IN')} Saved / Car (6.8%)` : '₹0 Concession (0%)',
     timelineStatuses: [
-      { id: 'initiated', label: 'Formation', timestamp: 'Stage 1', completed: true },
-      { id: 'verified', label: 'RFQs Open', timestamp: 'Stage 2', completed: firstActiveGroup ? firstActiveGroup.stage !== 'FORMATION' : true },
-      { id: 'converting', label: 'Negotiating', timestamp: 'Stage 3', completed: firstActiveGroup ? firstActiveGroup.stage === 'UNDER_REVIEW' || firstActiveGroup.stage === 'CLOSED' : true, current: true },
+      { id: 'initiated', label: 'Formation', timestamp: 'Stage 1', completed: firstActiveGroup !== null },
+      { id: 'verified', label: 'RFQs Open', timestamp: 'Stage 2', completed: firstActiveGroup ? firstActiveGroup.stage !== 'FORMATION' : false },
+      { id: 'converting', label: 'Negotiating', timestamp: 'Stage 3', completed: firstActiveGroup ? firstActiveGroup.stage === 'UNDER_REVIEW' || firstActiveGroup.stage === 'CLOSED' : false, current: true },
       { id: 'delivered', label: 'Allocated', timestamp: 'Stage 4', completed: firstActiveGroup ? firstActiveGroup.stage === 'CLOSED' : false },
     ],
   };
 
-  // 5. Dynamic Spending & Demand Map Clusters from DB
+  // 5. Dynamic Spending & Demand Map Clusters from DB (strictly from DB, empty if zero records)
   const rawHubs = adminAnalytics?.hubDistribution || [];
   const dynamicMapClusters = rawHubs.length > 0
     ? rawHubs.map((h, i) => ({
@@ -239,13 +237,9 @@ export const AdminDashboard = () => {
         avgConcession: '6.8%',
         activityLevel: h.buyers > 5 ? 'High' : 'Normal',
       }))
-    : mockFinanceData.demandMapClusters.map((c, i) => ({
-        ...c,
-        buyers: Math.round(realBuyers * (i === 0 ? 0.4 : i === 1 ? 0.25 : 0.15)),
-        grossDemand: `₹${((realGMV * (i === 0 ? 0.4 : i === 1 ? 0.25 : 0.15)) / 100000).toFixed(1)} L`,
-      }));
+    : [];
 
-  // 6. Dynamic Budget & Quota from DB
+  // 6. Dynamic Budget & Quota from DB (zero static percentages when GMV is 0)
   const quotaTarget = 50000000; // ₹50 Lakh target
   const quotaPct = realGMV > 0 ? Math.min(100, Number(((realGMV / quotaTarget) * 100).toFixed(1))) : 0;
   const dynamicBudgetStats = {
@@ -253,12 +247,17 @@ export const AdminDashboard = () => {
     currentFulfilled: realGMV,
     completionPercentage: quotaPct,
     previousMonthComparison: `${realActiveGroups} active demand groups in DB`,
-    remainingTarget: realGMV < quotaTarget ? `₹${((quotaTarget - realGMV) / 100000).toFixed(1)} L remaining` : 'Target Exceeded!',
-    categories: [
+    remainingTarget: realGMV > 0 && realGMV < quotaTarget ? `₹${((quotaTarget - realGMV) / 100000).toFixed(1)} L remaining` : (realGMV >= quotaTarget ? 'Target Exceeded!' : '₹50.0 L target (0 active bookings)'),
+    categories: realGMV > 0 ? [
       { name: 'SUVs & Crossovers', percentage: 52, color: '#ED1725', amount: `₹${((realGMV * 0.52) / 100000).toFixed(1)} L` },
       { name: 'Executive Sedans', percentage: 22, color: '#38BDF8', amount: `₹${((realGMV * 0.22) / 100000).toFixed(1)} L` },
       { name: 'Pure Electric Vehicles', percentage: 16, color: '#22C55E', amount: `₹${((realGMV * 0.16) / 100000).toFixed(1)} L` },
       { name: 'Urban Hatchbacks', percentage: 10, color: '#F59E0B', amount: `₹${((realGMV * 0.10) / 100000).toFixed(1)} L` },
+    ] : [
+      { name: 'SUVs & Crossovers', percentage: 0, color: '#ED1725', amount: '₹0' },
+      { name: 'Executive Sedans', percentage: 0, color: '#38BDF8', amount: '₹0' },
+      { name: 'Pure Electric Vehicles', percentage: 0, color: '#22C55E', amount: '₹0' },
+      { name: 'Urban Hatchbacks', percentage: 0, color: '#F59E0B', amount: '₹0' },
     ],
   };
 
@@ -584,8 +583,8 @@ export const AdminDashboard = () => {
                 overview: dynamicSavingsOverview,
                 categoriesProgress: dynamicSavingsOverview.categoriesProgress,
                 initialGoals: dynamicGoals,
-                projections: mockFinanceData.projections,
-                roundUpsData: mockFinanceData.roundUps,
+                projections: [],
+                roundUpsData: [],
               }}
               hideAmounts={hideAmounts}
               onOpenAddGoalModal={() => setIsAddGoalOpen(true)}

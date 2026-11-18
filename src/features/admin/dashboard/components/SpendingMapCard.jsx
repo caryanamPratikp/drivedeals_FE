@@ -197,12 +197,23 @@ export const SpendingMapCard = ({ clusters = [], hideAmounts = false }) => {
               </div>
             </motion.div>
           )}
+
+          {clusters.length === 0 && (
+            <div className="absolute inset-0 flex flex-col items-center justify-center p-4 text-center z-20 pointer-events-none">
+              <div className="px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs text-[#A1A1AA] font-mono mb-1">
+                0 Active Demand Clusters in DB
+              </div>
+              <p className="text-[11px] text-[#71717A]">
+                Clusters appear as buyers join collectives in Pune
+              </p>
+            </div>
+          )}
         </div>
       </div>
 
       {/* Footer Meta */}
       <div className="pt-4 mt-3 border-t border-white/5 flex items-center justify-between text-xs text-[#A1A1AA]">
-        <span>5 Core Clusters Active in Pune Pilot</span>
+        <span>{clusters.length > 0 ? `${clusters.length} Core Clusters Active in Pune Pilot` : '0 Active Clusters in DB'}</span>
         <span className="text-emerald-400 font-mono text-[11px]">Telemetry Sync: 100% Live</span>
       </div>
     </motion.div>

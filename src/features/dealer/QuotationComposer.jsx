@@ -23,17 +23,17 @@ export const QuotationComposer = ({
   const dealerId = currentUser?.dealerId;
   const dealer = dealers.find((d) => d.id === dealerId) || dealers[0] || { businessName: currentUser?.dealershipName || 'Authorized Dealership', brand: currentUser?.brand || 'Dealership' };
 
-  const carBrand = car?.brand || 'Mahindra';
-  const dealerBrand = currentUser?.brand || dealer?.brand || 'Hyundai';
-  const isBrandMismatch = car?.brand && dealerBrand && dealerBrand !== 'ALL' && dealerBrand.toLowerCase() !== car.brand.toLowerCase();
+  const carBrand = car?.brand || group?.carBrand || (group?.carModel && group.carModel.split(' ')[0]) || '';
+  const dealerBrand = currentUser?.brand || dealer?.brand || '';
+  const isBrandMismatch = carBrand && dealerBrand && dealerBrand !== 'ALL' && dealerBrand.toLowerCase() !== carBrand.toLowerCase();
 
-  // Form State
-  const basePrice = Number(variant?.exShowroomPrice || group?.variant?.exShowroomPrice || 1399000);
+  // Form State - purely dynamic from selected collective variant
+  const basePrice = Number(variant?.exShowroomPrice || group?.variant?.exShowroomPrice || car?.illustrativeStartingPrice || 0);
   const [breakdown, setBreakdown] = useState({
     exShowroomPrice: previousVersion?.exShowroomPrice || basePrice,
     registrationCharges: previousVersion?.registrationCharges || Math.round(basePrice * 0.10),
     insuranceAmount: previousVersion?.insuranceAmount || Math.round(basePrice * 0.045),
-    accessoriesAmount: previousVersion?.accessoriesAmount || 12000,
+    accessoriesAmount: previousVersion?.accessoriesAmount || 0,
     otherCharges: previousVersion?.otherCharges || 0,
     discountAmount: previousVersion?.discountAmount || Math.round(basePrice * 0.03),
   });

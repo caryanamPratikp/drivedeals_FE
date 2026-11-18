@@ -10,15 +10,15 @@ export const TransferInfoCard = ({
   const [isSwapped, setIsSwapped] = useState(false);
   const [activeStep, setActiveStep] = useState(2); // 0-based: 2 = Converting / Allocating
 
-  const oemBenchmark = transferDetails.oemBenchmark || { currency: 'INR', amount: 1099900, label: 'OEM Showroom Base Price' };
-  const negotiatedCollective = transferDetails.negotiatedCollective || { currency: 'INR', amount: 985000, label: 'DriveDeals Collective Price' };
-  const concessionDelta = transferDetails.concessionDelta || '₹1,14,900 Saved / Car (10.4%)';
-  const referenceNumber = transferDetails.referenceNumber || 'DD-SETTLE-LIVE';
+  const oemBenchmark = transferDetails.oemBenchmark || { currency: 'INR', amount: 0, label: 'No Active Collective' };
+  const negotiatedCollective = transferDetails.negotiatedCollective || { currency: 'INR', amount: 0, label: 'Awaiting Groups in DB' };
+  const concessionDelta = transferDetails.concessionDelta || '₹0 Saved (0%)';
+  const referenceNumber = transferDetails.referenceNumber || 'NO-ACTIVE-COLLECTIVE';
   const timelineStatuses = transferDetails.timelineStatuses || [
-    { id: 'initiated', label: 'Initiated', timestamp: '09:30 AM', completed: true },
-    { id: 'verified', label: 'Verified', timestamp: '10:15 AM', completed: true },
-    { id: 'converting', label: 'Allocating', timestamp: '11:00 AM', completed: true, current: true },
-    { id: 'delivered', label: 'Delivered', timestamp: 'Pending', completed: false },
+    { id: 'initiated', label: 'Formation', timestamp: 'Stage 1', completed: false },
+    { id: 'verified', label: 'RFQs Open', timestamp: 'Stage 2', completed: false },
+    { id: 'converting', label: 'Negotiating', timestamp: 'Stage 3', completed: false, current: true },
+    { id: 'delivered', label: 'Allocated', timestamp: 'Stage 4', completed: false },
   ];
 
   const topPanel = isSwapped ? negotiatedCollective : oemBenchmark;
