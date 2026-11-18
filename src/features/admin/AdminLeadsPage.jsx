@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useAppStore } from '../../store';
 import { AlertTriangle, CheckCircle2, ShieldCheck, Users } from 'lucide-react';
@@ -9,8 +9,12 @@ import { EmptyState } from '../../components/common/EmptyState';
 import { staggerContainer, staggerItem } from '../../lib/animations';
 
 export const AdminLeadsPage = () => {
-  const { leads = [], leadDisputes = [], dealers = [], resolveLeadDispute } = useAppStore();
+  const { leads = [], leadDisputes = [], dealers = [], fetchAdminLeads, resolveLeadDispute } = useAppStore();
   const [activeTab, setActiveTab] = useState('DISPUTES');
+
+  useEffect(() => {
+    fetchAdminLeads();
+  }, [fetchAdminLeads]);
   const [resolutionNote, setResolutionNote] = useState('');
   const [activeDisputeId, setActiveDisputeId] = useState(null);
 

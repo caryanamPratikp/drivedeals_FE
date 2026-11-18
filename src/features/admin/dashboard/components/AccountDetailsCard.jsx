@@ -57,41 +57,49 @@ export const AccountDetailsCard = ({
             <span className="text-xs font-heading font-medium text-[#A1A1AA] uppercase tracking-wider">
               Last Settled Recipient
             </span>
-            <button
-              onClick={() => onOpenRecipientModal && onOpenRecipientModal(lastRecipient)}
-              className="text-[11px] text-[#ED1725] hover:text-white transition-colors flex items-center gap-1"
-            >
-              <span>View Audit</span>
-              <ExternalLink className="w-3 h-3" />
-            </button>
+            {lastRecipient && (
+              <button
+                onClick={() => onOpenRecipientModal && onOpenRecipientModal(lastRecipient)}
+                className="text-[11px] text-[#ED1725] hover:text-white transition-colors flex items-center gap-1"
+              >
+                <span>View Audit</span>
+                <ExternalLink className="w-3 h-3" />
+              </button>
+            )}
           </div>
 
-          <motion.div
-            whileHover={{ scale: 1.01, backgroundColor: 'rgba(255, 255, 255, 0.03)' }}
-            onClick={() => onOpenRecipientModal && onOpenRecipientModal(lastRecipient)}
-            className="flex items-center justify-between p-3 rounded-xl bg-white/[0.02] border border-white/5 cursor-pointer transition-all"
-          >
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-[#ED1725]/10 border border-[#ED1725]/30 flex items-center justify-center font-heading font-black text-sm text-[#ED1725]">
-                {lastRecipient.initials}
-              </div>
-              <div>
-                <div className="text-xs font-heading font-bold text-white hover:text-[#ED1725] transition-colors">
-                  {lastRecipient.name}
+          {lastRecipient ? (
+            <motion.div
+              whileHover={{ scale: 1.01, backgroundColor: 'rgba(255, 255, 255, 0.03)' }}
+              onClick={() => onOpenRecipientModal && onOpenRecipientModal(lastRecipient)}
+              className="flex items-center justify-between p-3 rounded-xl bg-white/[0.02] border border-white/5 cursor-pointer transition-all"
+            >
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-[#ED1725]/10 border border-[#ED1725]/30 flex items-center justify-center font-heading font-black text-sm text-[#ED1725]">
+                  {lastRecipient.initials || 'DP'}
                 </div>
-                <div className="text-[11px] text-[#A1A1AA]">{lastRecipient.units}</div>
+                <div>
+                  <div className="text-xs font-heading font-bold text-white hover:text-[#ED1725] transition-colors">
+                    {lastRecipient.name}
+                  </div>
+                  <div className="text-[11px] text-[#A1A1AA]">{lastRecipient.units}</div>
+                </div>
               </div>
-            </div>
 
-            <div className="text-right">
-              <div className="text-xs font-heading font-black text-white">
-                {hideAmounts ? '••••••' : lastRecipient.formattedAmount}
+              <div className="text-right">
+                <div className="text-xs font-heading font-black text-white">
+                  {hideAmounts ? '••••••' : lastRecipient.formattedAmount}
+                </div>
+                <div className="text-[10px] text-emerald-400 font-mono">
+                  {lastRecipient.status} • {lastRecipient.date}
+                </div>
               </div>
-              <div className="text-[10px] text-emerald-400 font-mono">
-                {lastRecipient.status} • {lastRecipient.date}
-              </div>
+            </motion.div>
+          ) : (
+            <div className="p-3 rounded-xl bg-white/[0.01] border border-white/5 text-center text-xs text-[#A1A1AA]">
+              No dealership franchise settlements recorded yet.
             </div>
-          </motion.div>
+          )}
         </div>
       </div>
 

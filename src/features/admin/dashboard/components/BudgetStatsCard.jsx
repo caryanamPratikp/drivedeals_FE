@@ -3,14 +3,14 @@ import { motion } from 'framer-motion';
 import { PieChart, TrendingUp, CheckCircle, Target } from 'lucide-react';
 import { luxuryEase } from '../../../../lib/animations';
 
-export const BudgetStatsCard = ({ budgetStats, hideAmounts = false }) => {
+export const BudgetStatsCard = ({ budgetStats = {}, hideAmounts = false }) => {
   const {
-    monthlyQuotaTarget,
-    currentFulfilled,
-    completionPercentage,
-    previousMonthComparison,
-    remainingTarget,
-    categories,
+    monthlyQuotaTarget = 50000000,
+    currentFulfilled = 0,
+    completionPercentage = 0,
+    previousMonthComparison = 'Platform Goal Tracking',
+    remainingTarget = '₹50,00,000 target',
+    categories = [],
   } = budgetStats;
 
   // SVG Radial Circle Parameters

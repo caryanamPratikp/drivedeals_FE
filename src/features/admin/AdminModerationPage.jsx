@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useAppStore } from '../../store';
 import { formatDate } from '../../lib/dates';
@@ -8,7 +8,11 @@ import { EmptyState } from '../../components/common/EmptyState';
 import { staggerContainer, staggerItem } from '../../lib/animations';
 
 export const AdminModerationPage = () => {
-  const { moderationItems = [], moderateContentItem } = useAppStore();
+  const { moderationItems = [], fetchAdminOverview, moderateContentItem } = useAppStore();
+
+  useEffect(() => {
+    fetchAdminOverview();
+  }, [fetchAdminOverview]);
 
   return (
     <motion.div

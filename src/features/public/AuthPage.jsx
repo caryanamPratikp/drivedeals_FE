@@ -71,7 +71,7 @@ export const AuthPage = ({ defaultTab = 'login' }) => {
       const mode = tab === 'login' ? 'LOGIN' : 'REGISTER';
       const res = await authApi.sendOtp(fullPhone, mode);
 
-      const otpCode = cleanPhone.endsWith('9876543210') ? '123456' : res.devOtp || '123456';
+      const otpCode = res?.devOtp || (cleanPhone.endsWith('9876543210') ? '123456' : res?.devOtp || '123456');
       setDevOtpHint(otpCode);
       setOtpValue(otpCode);
       setShowOtpOverlay(true);
@@ -136,7 +136,7 @@ export const AuthPage = ({ defaultTab = 'login' }) => {
       const cleanPhone = '+91' + phone.replace(/\D/g, '');
       const mode = tab === 'login' ? 'LOGIN' : 'REGISTER';
       const res = await authApi.sendOtp(cleanPhone, mode);
-      const code = cleanPhone.endsWith('9876543210') ? '123456' : res.devOtp || '123456';
+      const code = res?.devOtp || (cleanPhone.endsWith('9876543210') ? '123456' : '123456');
       setDevOtpHint(code);
       setOtpValue(code);
     } catch (err) {

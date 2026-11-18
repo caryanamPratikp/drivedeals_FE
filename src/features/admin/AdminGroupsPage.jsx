@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useAppStore } from '../../store';
 import { AlertCircle, Users, CheckCircle2 } from 'lucide-react';
@@ -8,10 +8,23 @@ import { EmptyState } from '../../components/common/EmptyState';
 import { staggerContainer, staggerItem } from '../../lib/animations';
 
 export const AdminGroupsPage = () => {
-  const { groups = [], variants = [], cars = [], quotations = [], quotationVersions = [], updateGroupStatus } =
-    useAppStore();
+  const {
+    groups = [],
+    variants = [],
+    cars = [],
+    quotations = [],
+    quotationVersions = [],
+    fetchAdminGroups,
+    fetchCars,
+    updateGroupStatus,
+  } = useAppStore();
   const [feedback, setFeedback] = useState(null);
   const [successMsg, setSuccessMsg] = useState(null);
+
+  useEffect(() => {
+    fetchAdminGroups();
+    fetchCars();
+  }, [fetchAdminGroups, fetchCars]);
 
   const handleStatusChange = (groupId, newStatus) => {
     setFeedback(null);

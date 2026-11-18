@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useAppStore } from '../../store';
 import { formatDate } from '../../lib/dates';
@@ -10,8 +10,12 @@ import { EmptyState } from '../../components/common/EmptyState';
 import { staggerContainer, staggerItem } from '../../lib/animations';
 
 export const AdminDealersPage = () => {
-  const { dealers = [], reviewDealerApplication } = useAppStore();
+  const { dealers = [], fetchAdminDealers, reviewDealerApplication } = useAppStore();
   const [selectedDealerId, setSelectedDealerId] = useState(null);
+
+  useEffect(() => {
+    fetchAdminDealers();
+  }, [fetchAdminDealers]);
   const [pendingDecision, setPendingDecision] = useState(null);
   const [reasonInput, setReasonInput] = useState('');
   const [showConfirmModal, setShowConfirmModal] = useState(false);

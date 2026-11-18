@@ -3,14 +3,23 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeftRight, Check, Clock, ShieldCheck, Tag, ArrowRight } from 'lucide-react';
 
 export const TransferInfoCard = ({
-  transferDetails,
+  transferDetails = {},
   hideAmounts = false,
   onInitiateTransfer,
 }) => {
   const [isSwapped, setIsSwapped] = useState(false);
   const [activeStep, setActiveStep] = useState(2); // 0-based: 2 = Converting / Allocating
 
-  const { oemBenchmark, negotiatedCollective, concessionDelta, referenceNumber, timelineStatuses } = transferDetails;
+  const oemBenchmark = transferDetails.oemBenchmark || { currency: 'INR', amount: 1099900, label: 'OEM Showroom Base Price' };
+  const negotiatedCollective = transferDetails.negotiatedCollective || { currency: 'INR', amount: 985000, label: 'DriveDeals Collective Price' };
+  const concessionDelta = transferDetails.concessionDelta || '₹1,14,900 Saved / Car (10.4%)';
+  const referenceNumber = transferDetails.referenceNumber || 'DD-SETTLE-LIVE';
+  const timelineStatuses = transferDetails.timelineStatuses || [
+    { id: 'initiated', label: 'Initiated', timestamp: '09:30 AM', completed: true },
+    { id: 'verified', label: 'Verified', timestamp: '10:15 AM', completed: true },
+    { id: 'converting', label: 'Allocating', timestamp: '11:00 AM', completed: true, current: true },
+    { id: 'delivered', label: 'Delivered', timestamp: 'Pending', completed: false },
+  ];
 
   const topPanel = isSwapped ? negotiatedCollective : oemBenchmark;
   const bottomPanel = isSwapped ? oemBenchmark : negotiatedCollective;

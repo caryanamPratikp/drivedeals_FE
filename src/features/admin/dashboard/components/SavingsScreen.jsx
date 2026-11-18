@@ -27,12 +27,16 @@ const goalIconMap = {
 };
 
 export const SavingsScreen = ({
-  savingsData,
+  savingsData = {},
   hideAmounts = false,
   onOpenAddGoalModal,
   onOpenAddMoneyModal,
 }) => {
-  const { overview, categoriesProgress, initialGoals, projections, roundUpsData } = savingsData;
+  const overview = savingsData.overview || { totalSaved: 0, milestonePercent: 0, interestRebateEarned: 0, savedThisMonth: 0 };
+  const categoriesProgress = savingsData.categoriesProgress || [];
+  const initialGoals = savingsData.initialGoals || [];
+  const projections = savingsData.projections || {};
+  const roundUpsData = savingsData.roundUpsData || { enabled: false, formattedAccumulated: '₹0', transactionsCount: 0 };
 
   const [goals, setGoals] = useState(initialGoals);
   const [timeframe, setTimeframe] = useState('1Y'); // '3M' | '6M' | '1Y'
@@ -40,7 +44,21 @@ export const SavingsScreen = ({
   const [activeGoalMenu, setActiveGoalMenu] = useState(null);
   const [hoveredChartPoint, setHoveredChartPoint] = useState(null);
 
-  const currentProjection = projections[timeframe] || projections['1Y'];
+  const fallbackProjection = {
+    projectedAmount: '₹0',
+    currentSavings: '₹0',
+    estimatedInterest: '₹0',
+    monthlyContribution: '₹0',
+    labels: ['Q1', 'Q2', 'Q3', 'Q4'],
+    series: [
+      { month: 'Q1', actual: 0, projected: 0 },
+      { month: 'Q2', actual: null, projected: 0 },
+      { month: 'Q3', actual: null, projected: 0 },
+      { month: 'Q4', actual: null, projected: 0 },
+    ],
+  };
+
+  const currentProjection = projections[timeframe] || projections['1Y'] || fallbackProjection;
 
   return (
     <motion.div

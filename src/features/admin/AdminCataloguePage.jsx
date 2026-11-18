@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAppStore } from '../../store';
 import { Plus, Power, Car, Layers, CheckCircle2, AlertCircle } from 'lucide-react';
@@ -9,8 +9,12 @@ import { formatINR } from '../../lib/currency';
 import { staggerContainer, staggerItem } from '../../lib/animations';
 
 export const AdminCataloguePage = () => {
-  const { cars = [], variants = [], toggleCarActive, toggleVariantActive, addCatalogueCar } =
+  const { cars = [], variants = [], fetchCars, toggleCarActive, toggleVariantActive, addCatalogueCar } =
     useAppStore();
+
+  useEffect(() => {
+    fetchCars();
+  }, [fetchCars]);
   const [isAddOpen, setIsAddOpen] = useState(false);
   const [brand, setBrand] = useState('Tata');
   const [modelName, setModelName] = useState('');

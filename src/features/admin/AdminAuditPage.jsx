@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useAppStore } from '../../store';
 import { formatDateTime } from '../../lib/dates';
@@ -8,9 +8,13 @@ import { EmptyState } from '../../components/common/EmptyState';
 import { staggerContainer, staggerItem } from '../../lib/animations';
 
 export const AdminAuditPage = () => {
-  const { auditEvents = [] } = useAppStore();
+  const { auditEvents = [], fetchAdminAuditEvents } = useAppStore();
   const [entityFilter, setEntityFilter] = useState('ALL');
   const [searchQuery, setSearchQuery] = useState('');
+
+  useEffect(() => {
+    fetchAdminAuditEvents();
+  }, [fetchAdminAuditEvents]);
 
   const filteredEvents = auditEvents.filter((ev) => {
     if (entityFilter !== 'ALL' && ev.entityType !== entityFilter) return false;

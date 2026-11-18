@@ -1,11 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
 import { Sidebar } from './Sidebar';
 import { TopHeader } from './TopHeader';
+import { useAppStore } from '../../store';
 import { X } from 'lucide-react';
 
 export const AdminLayout = () => {
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
+  const { fetchAdminOverview } = useAppStore();
+
+  useEffect(() => {
+    fetchAdminOverview();
+  }, [fetchAdminOverview]);
 
   return (
     <div className="min-h-screen bg-[#090B0D] text-white flex overflow-x-hidden selection:bg-[#ED1725] selection:text-white antialiased">

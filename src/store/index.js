@@ -1077,7 +1077,7 @@ export const useAppStore = create((set, get) => ({
   fetchAdminDealers: async () => {
     try {
       const dealers = await fetchAdminDealers();
-      if (Array.isArray(dealers) && dealers.length > 0) {
+      if (Array.isArray(dealers)) {
         set({ dealers });
         return dealers;
       }
@@ -1106,7 +1106,7 @@ export const useAppStore = create((set, get) => ({
   fetchAdminUsers: async () => {
     try {
       const users = await fetchAdminUsers();
-      if (Array.isArray(users) && users.length > 0) {
+      if (Array.isArray(users)) {
         set({ users });
         return users;
       }
@@ -1118,7 +1118,7 @@ export const useAppStore = create((set, get) => ({
   fetchAdminGroups: async () => {
     try {
       const groups = await fetchAdminGroups();
-      if (Array.isArray(groups) && groups.length > 0) {
+      if (Array.isArray(groups)) {
         set({ groups });
         return groups;
       }
@@ -1130,7 +1130,7 @@ export const useAppStore = create((set, get) => ({
   fetchAdminLeads: async () => {
     try {
       const leads = await fetchAdminLeads();
-      if (Array.isArray(leads) && leads.length > 0) {
+      if (Array.isArray(leads)) {
         set({ leads });
         return leads;
       }
@@ -1142,7 +1142,7 @@ export const useAppStore = create((set, get) => ({
   fetchAdminAuditEvents: async () => {
     try {
       const auditEvents = await fetchAdminAudit();
-      if (Array.isArray(auditEvents) && auditEvents.length > 0) {
+      if (Array.isArray(auditEvents)) {
         set({ auditEvents });
         return auditEvents;
       }
@@ -1174,16 +1174,16 @@ export const useAppStore = create((set, get) => ({
         adminFetched: true,
         adminAnalytics: {
           ...state.adminAnalytics,
-          totalBuyers: Math.max(buyersCount, state.adminAnalytics?.totalBuyers || 148),
-          totalDealers: Math.max(dealers.length, state.adminAnalytics?.totalDealers || 14),
-          verifiedDealers: Math.max(verifiedDealersCount, state.adminAnalytics?.verifiedDealers || 11),
-          totalActiveGroups: Math.max(activeGroupsCount, state.adminAnalytics?.totalActiveGroups || 8),
-          totalCars: Math.max(cars.length, state.adminAnalytics?.totalCars || 6),
-          totalLeads: Math.max(leads.length, state.adminAnalytics?.totalLeads || 24),
-          totalGMV: state.adminAnalytics?.totalGMV || 48200000,
-          totalSavings: state.adminAnalytics?.totalSavings || 3860000,
-          avgDiscountPercentage: 7.4,
-          conversionRate: 78.5,
+          totalBuyers: state.adminAnalytics?.totalBuyers !== undefined ? state.adminAnalytics.totalBuyers : buyersCount,
+          totalDealers: state.adminAnalytics?.totalDealers !== undefined ? state.adminAnalytics.totalDealers : dealers.length,
+          verifiedDealers: state.adminAnalytics?.verifiedDealers !== undefined ? state.adminAnalytics.verifiedDealers : verifiedDealersCount,
+          totalActiveGroups: state.adminAnalytics?.totalActiveGroups !== undefined ? state.adminAnalytics.totalActiveGroups : activeGroupsCount,
+          totalCars: state.adminAnalytics?.totalCars !== undefined ? state.adminAnalytics.totalCars : cars.length,
+          totalLeads: state.adminAnalytics?.totalLeads !== undefined ? state.adminAnalytics.totalLeads : leads.length,
+          totalGMV: state.adminAnalytics?.totalGMV !== undefined ? state.adminAnalytics.totalGMV : 0,
+          totalSavings: state.adminAnalytics?.totalSavings !== undefined ? state.adminAnalytics.totalSavings : 0,
+          avgDiscountPercentage: state.adminAnalytics?.avgDiscountPercentage || 0,
+          conversionRate: state.adminAnalytics?.conversionRate || 0,
         },
       }));
     }
