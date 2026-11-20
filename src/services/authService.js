@@ -14,6 +14,7 @@ export const authService = {
       role: profile.role,
       city: profile.city,
       dealershipName: profile.dealershipName,
+      brand: profile.brand,
     });
     return res.data?.data !== undefined ? res.data.data : res.data;
   },

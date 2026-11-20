@@ -17,6 +17,7 @@ export const authApi = {
         role: profile.role,
         city: profile.city,
         dealershipName: profile.dealershipName,
+        brand: profile.brand,
       },
     }),
 
