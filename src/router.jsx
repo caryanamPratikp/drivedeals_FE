@@ -39,6 +39,7 @@ import { DealerOfferDetailPage } from './features/dealer/DealerOfferDetailPage';
 import { DealerLeadsPage } from './features/dealer/DealerLeadsPage';
 import { DealerLeadDetailPage } from './features/dealer/DealerLeadDetailPage';
 import { DealerProfilePage } from './features/dealer/DealerProfilePage';
+import { DealerOnboardingPage } from './features/dealer/DealerOnboardingPage';
 
 // Admin pages
 import { AdminDashboard } from './features/admin/AdminDashboard';
@@ -113,6 +114,7 @@ export const router = createBrowserRouter([
       { path: 'leads', element: <DealerLeadsPage /> },
       { path: 'leads/:leadId', element: <DealerLeadDetailPage /> },
       { path: 'profile', element: <DealerProfilePage /> },
+      { path: 'onboarding', element: <DealerOnboardingPage /> },
     ],
   },
 

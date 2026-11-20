@@ -31,9 +31,21 @@ export const OfferComparePage = () => {
     setExpandedOfferIds((prev) => ({ ...prev, [id]: !prev[id] }));
   };
 
+  const isDealerVerified = (dealerId, dealerObj) => {
+    if (dealerObj?.isVerified === true) return true;
+    if (dealerObj?.status === 'VERIFIED' || dealerObj?.verificationStatus === 'VERIFIED') return true;
+    const d = (dealers || []).find((item) => item.id === dealerId);
+    return d?.status === 'VERIFIED' || d?.verificationStatus === 'VERIFIED';
+  };
+
   const publishedVersions = useMemo(() => {
-    return quotationVersions.filter((qv) => qv.status === 'PUBLISHED');
-  }, [quotationVersions]);
+    return quotationVersions
+      .filter((qv) => qv.status === 'PUBLISHED')
+      .filter((qv) => {
+        const q = quotations.find((quote) => quote.id === qv.quotationId);
+        return isDealerVerified(q?.dealerId || q?.dealer?.id, q?.dealer);
+      });
+  }, [quotationVersions, quotations, dealers]);
 
   const variantsWithOffers = useMemo(() => {
     const varIds = Array.from(
@@ -177,10 +189,16 @@ export const OfferComparePage = () => {
 
                   <div className="p-6 sm:p-7 space-y-4">
                     <div className="flex items-center justify-between">
-                      <span className="font-heading font-bold text-sm text-white flex items-center gap-1.5">
-                        <Building2 size={14} className="text-[#ED1725]" />
-                        {dealer.businessName}
-                      </span>
+                      <div className="flex items-center gap-2">
+                        <span className="font-heading font-bold text-sm text-white flex items-center gap-1.5">
+                          <Building2 size={14} className="text-[#ED1725]" />
+                          {dealer.businessName}
+                        </span>
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] bg-emerald-500/15 text-emerald-400 font-semibold border border-emerald-500/30">
+                          <ShieldCheck size={11} className="stroke-[2.5]" />
+                          Verified
+                        </span>
+                      </div>
                       <span className="text-[10px] bg-[#090B0D] text-white px-2.5 py-0.5 rounded-full border border-white/10 font-mono">
                         v{version.versionNumber}
                       </span>

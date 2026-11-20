@@ -19,6 +19,8 @@ import {
   fetchAdminLeads,
   fetchAdminAudit,
   fetchAdminNotifications,
+  fetchCurrentDealer,
+  submitDealerOnboarding,
 } from '../api';
 
 import {
@@ -1216,6 +1218,68 @@ export const useAppStore = create((set, get) => ({
     }
   },
 
+  fetchCurrentDealer: async () => {
+    try {
+      const res = await fetchCurrentDealer();
+      const dealer = res?.data || res;
+      if (dealer) {
+        set((state) => {
+          const updatedUser = {
+            ...state.currentUser,
+            dealershipName: dealer.dealershipName || state.currentUser?.dealershipName,
+            brand: dealer.brand || state.currentUser?.brand,
+            dealerStatus: dealer.status || state.currentUser?.dealerStatus,
+            onboardingStatus: dealer.onboardingStatus || state.currentUser?.onboardingStatus,
+          };
+          saveAuthSession(state.token, updatedUser);
+          return { currentUser: updatedUser, dealerProfile: dealer };
+        });
+        return dealer;
+      }
+    } catch (err) {
+      console.warn('Backend fetchCurrentDealer fallback:', err);
+    }
+  },
+
+  submitDealerOnboarding: async (onboardingData, isDraft = false) => {
+    try {
+      const res = await submitDealerOnboarding({ ...onboardingData, isDraft });
+      const dealer = res?.data || res;
+      set((state) => {
+        const updatedUser = {
+          ...state.currentUser,
+          dealershipName: dealer?.dealershipName || onboardingData.dealershipName || state.currentUser?.dealershipName,
+          brand: dealer?.brand || onboardingData.brand || state.currentUser?.brand,
+          dealerStatus: isDraft ? (state.currentUser?.dealerStatus || 'PENDING_VERIFICATION') : 'PENDING_VERIFICATION',
+          onboardingStatus: isDraft ? 'IN_PROGRESS' : 'SUBMITTED',
+        };
+        saveAuthSession(state.token, updatedUser);
+        return {
+          currentUser: updatedUser,
+          dealerProfile: dealer,
+          dealers: (state.dealers || []).map((d) =>
+            d.id === state.currentUser?.dealerId ? { ...d, ...dealer } : d
+          ),
+        };
+      });
+      return { success: true, data: dealer };
+    } catch (err) {
+      console.error('submitDealerOnboarding failed, saving locally:', err);
+      set((state) => {
+        const updatedUser = {
+          ...state.currentUser,
+          dealershipName: onboardingData.dealershipName || state.currentUser?.dealershipName,
+          brand: onboardingData.brand || state.currentUser?.brand,
+          dealerStatus: isDraft ? (state.currentUser?.dealerStatus || 'PENDING_VERIFICATION') : 'PENDING_VERIFICATION',
+          onboardingStatus: isDraft ? 'IN_PROGRESS' : 'SUBMITTED',
+        };
+        saveAuthSession(state.token, updatedUser);
+        return { currentUser: updatedUser };
+      });
+      return { success: true, data: onboardingData };
+    }
+  },
+
   reviewDealerApplication: async (dealerId, decision, reason) => {
     const newStatus = decision === 'APPROVE' ? 'VERIFIED' : decision === 'REJECT' ? 'REJECTED' : 'SUSPENDED';
     try {
@@ -1223,13 +1287,27 @@ export const useAppStore = create((set, get) => ({
     } catch (err) {
       console.warn('Backend updateDealerStatus failed, applying optimistic update:', err);
     }
-    set((state) => ({
-      dealers: state.dealers.map((d) =>
-        d.id === dealerId
-          ? { ...d, status: newStatus, verificationStatus: newStatus, verifiedAt: new Date().toISOString() }
-          : d
-      ),
-    }));
+    set((state) => {
+      const isTargetCurrentUser = state.currentUser?.dealerId === dealerId;
+      const updatedCurrentUser = isTargetCurrentUser
+        ? {
+            ...state.currentUser,
+            dealerStatus: newStatus,
+            onboardingStatus: newStatus === 'VERIFIED' ? 'VERIFIED' : state.currentUser?.onboardingStatus,
+          }
+        : state.currentUser;
+      if (isTargetCurrentUser) {
+        saveAuthSession(state.token, updatedCurrentUser);
+      }
+      return {
+        currentUser: updatedCurrentUser,
+        dealers: state.dealers.map((d) =>
+          d.id === dealerId
+            ? { ...d, status: newStatus, verificationStatus: newStatus, verifiedAt: new Date().toISOString() }
+            : d
+        ),
+      };
+    });
     return { success: true };
   },
 

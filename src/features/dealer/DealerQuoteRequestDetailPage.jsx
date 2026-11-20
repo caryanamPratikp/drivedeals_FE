@@ -132,26 +132,50 @@ export const DealerQuoteRequestDetailPage = () => {
       </div>
 
       {/* Composer Section */}
-      <div className="bg-[#17191D] rounded-3xl border border-white/10 p-6 sm:p-8 shadow-2xl space-y-6">
-        <div className="border-b border-white/10 pb-4">
-          <h2 className="text-lg font-heading font-black text-white flex items-center gap-2">
-            <FileSpreadsheet className="w-5 h-5 text-[#ED1725]" />
-            Submit Competitive Group Quotation
+      {currentUser?.dealerStatus !== 'VERIFIED' ? (
+        <div className="bg-[#17191D] rounded-3xl border border-amber-500/30 p-8 shadow-2xl text-center space-y-4">
+          <div className="w-14 h-14 rounded-2xl bg-amber-500/15 border border-amber-500/30 text-amber-400 flex items-center justify-center mx-auto">
+            <Clock size={28} />
+          </div>
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-400 text-xs font-bold uppercase tracking-wider">
+            Details Yet to Verify
+          </div>
+          <h2 className="text-xl font-heading font-black text-white">
+            Quotation Submission Locked
           </h2>
-          <p className="text-xs text-[#A1A1AA] mt-1 font-normal">
-            Submit itemized ex-showroom and on-road pricing with volume group incentives.
+          <p className="text-sm text-slate-300 max-w-lg mx-auto leading-relaxed">
+            Details are yet to be verified by platform administrator. Once verified, you will be able to review specific demands and submit your quotes.
           </p>
+          <div className="pt-2">
+            <Link to="/dealer/quote-requests">
+              <PrimaryButton size="sm" className="font-bold">
+                Return to Bulk Requests
+              </PrimaryButton>
+            </Link>
+          </div>
         </div>
+      ) : (
+        <div className="bg-[#17191D] rounded-3xl border border-white/10 p-6 sm:p-8 shadow-2xl space-y-6">
+          <div className="border-b border-white/10 pb-4">
+            <h2 className="text-lg font-heading font-black text-white flex items-center gap-2">
+              <FileSpreadsheet className="w-5 h-5 text-[#ED1725]" />
+              Submit Competitive Group Quotation
+            </h2>
+            <p className="text-xs text-[#A1A1AA] mt-1 font-normal">
+              Submit itemized ex-showroom and on-road pricing with volume group incentives.
+            </p>
+          </div>
 
-        <QuotationComposer
-          groupId={group.id}
-          quoteRequestId={req.id}
-          existingQuotationId={existingQuote?.id}
-          previousVersion={existingLatestVersion}
-          onSuccess={() => navigate('/dealer/offers')}
-          onCancel={() => navigate('/dealer/quote-requests')}
-        />
-      </div>
+          <QuotationComposer
+            groupId={group.id}
+            quoteRequestId={req.id}
+            existingQuotationId={existingQuote?.id}
+            previousVersion={existingLatestVersion}
+            onSuccess={() => navigate('/dealer/offers')}
+            onCancel={() => navigate('/dealer/quote-requests')}
+          />
+        </div>
+      )}
     </div>
   );
 };

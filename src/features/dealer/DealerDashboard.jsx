@@ -18,6 +18,7 @@ import { StatusBadge } from '../../components/common/StatusBadge';
 import { StatCard } from '../../components/common/StatCard';
 import { PrimaryButton, SecondaryButton } from '../../components/common/Buttons';
 import { EmptyState } from '../../components/common/EmptyState';
+import { VerificationPendingModal } from '../../components/common/VerificationPendingModal';
 
 export const DealerDashboard = () => {
   const {
@@ -35,6 +36,9 @@ export const DealerDashboard = () => {
     fetchCars
   } = useAppStore();
   const navigate = useNavigate();
+  const [showVerificationModal, setShowVerificationModal] = useState(false);
+
+  const isVerified = currentUser?.dealerStatus === 'VERIFIED';
 
   useEffect(() => {
     fetchDealerLeads();
@@ -247,11 +251,21 @@ export const DealerDashboard = () => {
                         </div>
                       </div>
 
-                      <Link to={`/dealer/quote-requests/${req.id}`}>
-                        <PrimaryButton size="sm" className="font-bold">
+                      {isVerified ? (
+                        <Link to={`/dealer/quote-requests/${req.id}`}>
+                          <PrimaryButton size="sm" className="font-bold">
+                            {existingQuote ? 'Update Offer' : 'Submit Offer'}
+                          </PrimaryButton>
+                        </Link>
+                      ) : (
+                        <PrimaryButton
+                          size="sm"
+                          className="font-bold"
+                          onClick={() => setShowVerificationModal(true)}
+                        >
                           {existingQuote ? 'Update Offer' : 'Submit Offer'}
                         </PrimaryButton>
-                      </Link>
+                      )}
                     </motion.div>
                   );
                 })}
@@ -317,6 +331,11 @@ export const DealerDashboard = () => {
           </div>
         </div>
       </div>
+
+      <VerificationPendingModal
+        isOpen={showVerificationModal}
+        onClose={() => setShowVerificationModal(false)}
+      />
     </div>
   );
 };

@@ -131,9 +131,20 @@ export const BuyerGroupDetailPage = () => {
     );
   }
 
-  // Quotations for this group
-  const groupQuotes = (quotations || []).filter(Boolean).filter((q) => q?.groupId === group.id);
-  const publishedOffers = (quotationVersions || []).filter(Boolean).filter((qv) => groupQuotes.some((q) => q?.id === qv?.quotationId) && qv?.status === 'PUBLISHED');
+  // Quotations for this group (strictly only from verified dealerships)
+  const isDealerVerified = (dealerId, dealerObj) => {
+    if (dealerObj?.isVerified === true) return true;
+    if (dealerObj?.status === 'VERIFIED' || dealerObj?.verificationStatus === 'VERIFIED') return true;
+    const d = (dealers || []).find((item) => item.id === dealerId);
+    return d?.status === 'VERIFIED' || d?.verificationStatus === 'VERIFIED';
+  };
+
+  const groupQuotes = (quotations || [])
+    .filter(Boolean)
+    .filter((q) => q?.groupId === group.id && isDealerVerified(q.dealerId || q.dealer?.id, q.dealer));
+  const publishedOffers = (quotationVersions || [])
+    .filter(Boolean)
+    .filter((qv) => groupQuotes.some((q) => q?.id === qv?.quotationId) && qv?.status === 'PUBLISHED');
 
   // Group Signals
   const groupSignals = (buyerSignals || []).filter(Boolean).filter((s) => s?.groupId === group.id);
@@ -366,6 +377,10 @@ export const BuyerGroupDetailPage = () => {
                             <span className="font-bold text-sm text-white flex items-center gap-1.5">
                               <Building2 className="w-3.5 h-3.5 text-[#ED1725]" />
                               {dealer?.businessName || dealer?.dealershipName || 'Authorized Showroom'}
+                            </span>
+                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] bg-emerald-500/15 text-emerald-400 font-semibold border border-emerald-500/30">
+                              <ShieldCheck className="w-3 h-3 text-[#22C55E]" />
+                              Verified
                             </span>
                             <span className="text-[10px] bg-[#17191D] text-white px-2 py-0.5 rounded-full border border-white/10 font-mono">
                               Offer v{offer.versionNumber}

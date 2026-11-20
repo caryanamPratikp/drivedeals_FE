@@ -7,3 +7,4 @@ export * from './consents';
 export * from './leads';
 export * from './notifications';
 export * from './admin';
+export * from './dealers';

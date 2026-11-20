@@ -6,6 +6,7 @@ import { ArrowRight, Clock, Users, MapPin, Inbox, FileSpreadsheet, Sparkles } fr
 import { formatDate } from '../../lib/dates';
 import { EmptyState } from '../../components/common/EmptyState';
 import { PrimaryButton } from '../../components/common/Buttons';
+import { VerificationPendingModal } from '../../components/common/VerificationPendingModal';
 
 export const DealerQuoteRequestsPage = () => {
   const {
@@ -40,6 +41,9 @@ export const DealerQuoteRequestsPage = () => {
 
   const [statusFilter, setStatusFilter] = useState('ALL');
   const [brandFilter, setBrandFilter] = useState('ALL');
+  const [showVerificationModal, setShowVerificationModal] = useState(false);
+
+  const isVerified = currentUser?.dealerStatus === 'VERIFIED';
 
   // Robust brand resolver for any group representation
   const resolveGroupBrand = (grp) => {
@@ -240,17 +244,33 @@ export const DealerQuoteRequestsPage = () => {
                   </div>
                 </div>
 
-                <Link to={`/dealer/quote-requests/${req.id}`}>
-                  <PrimaryButton size="sm" className="font-bold">
+                {isVerified ? (
+                  <Link to={`/dealer/quote-requests/${req.id}`}>
+                    <PrimaryButton size="sm" className="font-bold">
+                      <span>{req.status === 'OPEN' ? 'Submit Quotation' : 'Review Submitted Quote'}</span>
+                      <ArrowRight className="w-3.5 h-3.5" />
+                    </PrimaryButton>
+                  </Link>
+                ) : (
+                  <PrimaryButton
+                    size="sm"
+                    className="font-bold"
+                    onClick={() => setShowVerificationModal(true)}
+                  >
                     <span>{req.status === 'OPEN' ? 'Submit Quotation' : 'Review Submitted Quote'}</span>
                     <ArrowRight className="w-3.5 h-3.5" />
                   </PrimaryButton>
-                </Link>
+                )}
               </motion.div>
             );
           })}
         </div>
       )}
+
+      <VerificationPendingModal
+        isOpen={showVerificationModal}
+        onClose={() => setShowVerificationModal(false)}
+      />
     </div>
   );
 };
